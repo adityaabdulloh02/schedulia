@@ -1,0 +1,543 @@
+:root {
+    --primary-color: #6C63FF; /* A vibrant, modern purple */
+    --secondary-color: #00C9A7; /* A fresh, energetic teal */
+    --accent-color: #FFC107; /* A bright yellow for highlights */
+    --warning-color: #FFA000; /* A strong orange for warnings */
+    --danger-color: #FF5252; /* A bold red for danger */
+    --info-color: #2196F3; /* A clear blue for info */
+    --text-color: #344767; /* Darker gray for better contrast and readability */
+    --text-light: #67748E; /* Lighter gray for secondary text */
+    --bg-light: #F0F2F5; /* A very light gray for background */
+    --card-bg: #FFFFFF; /* White for card backgrounds */
+    --card-shadow: 0 6px 25px 0 rgba(0, 0, 0, 0.08); /* More pronounced, modern shadow */
+    --border-radius: 0.75rem; /* Consistent border radius */
+    --gradient-primary: linear-gradient(195deg, #6C63FF 0%, #8A2BE2 100%); /* Purple to Violet */
+    --gradient-secondary: linear-gradient(195deg, #00C9A7 0%, #00B894 100%); /* Teal to Darker Teal */
+    --gradient-info: linear-gradient(195deg, #2196F3 0%, #1976D2 100%); /* Blue to Darker Blue */
+
+    /* New Typography Variables */
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.25rem;
+    --line-height-base: 1.6;
+    --heading-line-height: 1.3;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-color);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+}
+
+.container-fluid {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Page Heading */
+.d-sm-flex {
+    margin-bottom: 2.5rem;
+}
+
+.h3 {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: var(--font-size-lg);
+    line-height: var(--heading-line-height);
+}
+
+/* Card Link for Info Cards */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-link:hover .info-card {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* Widget Cards */
+.widget-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 2rem;
+    padding: 1.75rem;
+    transition: all 0.3s ease-in-out;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.widget-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
+}
+
+.widget-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px; /* Slightly thicker colored border at the top */
+    background: var(--primary-color);
+    transition: background 0.3s ease-in-out;
+}
+
+.widget-card.primary-border::before { background: var(--gradient-primary); }
+.widget-card.secondary-border::before { background: var(--gradient-secondary); }
+.widget-card.info-border::before { background: var(--gradient-info); }
+.widget-card.warning-border::before { background: var(--warning-color); }
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef; /* Slightly more visible separator */
+}
+
+.widget-title {
+    font-weight: 700;
+    color: var(--text-color);
+    font-size: 1.4rem;
+    line-height: var(--heading-line-height);
+    display: flex;
+    align-items: center;
+}
+
+.widget-title .fas {
+    margin-right: 0.8rem;
+    color: var(--primary-color);
+    font-size: 1.6rem;
+}
+
+/* Profile Widget */
+.profile-widget {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+}
+
+.profile-widget .profile-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(var(--primary-color), 0.35);
+    margin-bottom: 1.25rem;
+}
+
+.profile-widget .profile-info {
+    margin-left: 0;
+}
+
+.profile-widget .profile-name {
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    line-height: var(--heading-line-height);
+}
+
+.profile-widget p {
+    color: var(--text-light);
+    font-size: var(--font-size-sm);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+}
+
+.profile-widget .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.6rem;
+    margin-top: 1.5rem !important; /* Adjusted margin */
+}
+
+.profile-widget .btn-primary:hover {
+    background-color: #5a52d6;
+    border-color: #5a52d6;
+    transform: translateY(-3px);
+}
+
+/* Jadwal List (General, used in accordion) */
+.jadwal-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0; /* Remove default ul margin */
+}
+
+.jadwal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.8rem;
+    background-color: var(--card-bg);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.jadwal-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.jadwal-item.active {
+    background: var(--gradient-primary);
+    color: #fff;
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 18px rgba(var(--primary-color), 0.35);
+}
+.jadwal-item.active .jadwal-time,
+.jadwal-item.active .jadwal-room,
+.jadwal-item.active .text-muted,
+.jadwal-item.active .fas,
+.jadwal-item.active .jadwal-matkul {
+    color: #fff !important;
+}
+
+.jadwal-info {
+    flex-grow: 1;
+    margin-right: 1rem;
+}
+
+.jadwal-matkul {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+}
+
+.jadwal-item.active .jadwal-matkul {
+    color: #fff;
+}
+
+.jadwal-info small {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.jadwal-time {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+.jadwal-room {
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+/* Digital Clock Widget */
+#digital-clock-widget {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+}
+
+#digital-clock {
+    font-size: 4rem; /* Even larger font size */
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 4px;
+    margin-bottom: 0.75rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+#digital-date {
+    font-size: 1.3rem; /* Larger font size */
+    color: var(--text-light);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Info Cards */
+.info-card {
+    border: none;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-card .card-body {
+    padding: 1.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    opacity: 0.1;
+    transition: background 0.3s ease-in-out;
+    z-index: 0;
+}
+
+.info-card.border-left-primary::before { background: var(--gradient-primary); opacity: 0.18; }
+.info-card.border-left-success::before { background: var(--gradient-secondary); opacity: 0.18; }
+.info-card.info-border::before { background: var(--gradient-info); opacity: 0.18; }
+
+
+.info-card-title {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+.info-card.border-left-primary .info-card-title { color: var(--primary-color); }
+.info-card.border-left-success .info-card-title { color: var(--secondary-color); }
+.info-card.info-border .info-card-title { color: var(--info-color); }
+
+
+.info-card-value {
+    color: var(--text-color);
+    font-size: 2rem; /* Even larger value */
+    font-weight: 700;
+    line-height: 1.2;
+}
+.info-card.border-left-primary .info-card-value { color: var(--primary-color); }
+.info-card.border-left-success .info-card-value { color: var(--secondary-color); }
+.info-card.info-border .info-card-value { color: var(--info-color); }
+
+
+.info-card-icon {
+    color: rgba(0, 0, 0, 0.08); /* Even more subtle icon in background */
+    font-size: 4rem; /* Even larger icon */
+    position: absolute;
+    right: 1.75rem;
+    bottom: 1.25rem;
+    z-index: 0;
+}
+.info-card.border-left-primary .info-card-icon { color: rgba(var(--primary-color), 0.12); }
+.info-card.border-left-success .info-card-icon { color: rgba(var(--secondary-color), 0.12); }
+.info-card.info-border .info-card-icon { color: rgba(var(--info-color), 0.12); }
+
+
+/* Quick Links */
+.list-group-item {
+    border: none;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.6rem;
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 1.1rem 1.4rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.list-group-item:hover {
+    background-color: var(--bg-light);
+    color: var(--primary-color);
+    transform: translateX(6px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item .fas {
+    margin-right: 1.1rem;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.list-group-item:hover .fas {
+    color: var(--primary-color);
+}
+
+.list-group-item .fa-chevron-right {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 2.5rem;
+    color: var(--text-light);
+}
+
+.empty-state .fas {
+    color: var(--text-light);
+    font-size: 3.5rem;
+}
+
+.empty-state .lead {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state .text-muted {
+    font-size: var(--font-size-sm);
+}
+
+/* Accordion for Upcoming Jadwal */
+.accordion .card {
+    border: none;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.accordion .card-header {
+    background-color: var(--card-bg);
+    border-bottom: none;
+    padding: 0;
+}
+
+.accordion .card-header button {
+    width: 100%;
+    text-align: left;
+    padding: 1.2rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-radius: var(--border-radius);
+}
+
+.accordion .card-header button:hover {
+    background-color: var(--bg-light);
+    color: var(--primary-color);
+}
+
+.accordion .card-header button .fas {
+    margin-right: 0.8rem;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.accordion .card-body {
+    padding: 1.2rem 1.5rem 0.7rem;
+}
+
+.accordion .jadwal-list .jadwal-item {
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    padding: 0.8rem 0;
+    margin-bottom: 0;
+    border-bottom: 1px dashed #e0e0e0; /* Lighter dashed border */
+}
+
+.accordion .jadwal-list .jadwal-item:last-child {
+    border-bottom: none;
+}
+
+.accordion .jadwal-list .jadwal-item:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Schedule Timeline */
+.schedule-timeline {
+    position: relative;
+    padding-left: 35px; /* Increased space for the timeline line and markers */
+}
+
+.schedule-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px; /* Adjusted position */
+    width: 2px;
+    height: 100%;
+    background-color: #d0d0d0; /* Slightly darker timeline line */
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.8rem; /* Increased margin between items */
+    padding: 1.2rem 1.5rem;
+    border-radius: var(--border-radius);
+    background-color: var(--card-bg);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.timeline-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-item.active {
+    background: var(--gradient-primary);
+    color: #fff;
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 18px rgba(var(--primary-color), 0.35);
+}
+
+.timeline-item.active .timeline-marker {
+    background-color: var(--accent-color);
+    border-color: #fff;
+}
+
+.timeline-marker {
+    position: absolute;
+    top: 1.7rem;
+    left: -25px; /* Adjusted position */
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    border: 3px solid var(--card-bg); /* Slightly thicker border */
+    z-index: 1;
+}
+
+.timeline-content {
+    padding-left: 20px; /* Increased space for the marker */
+}
+
+.timeline-content .jadwal-matkul {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+}
+
+.timeline-content small {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.timeline-content .badge {
+    font-size: 0.8rem;
+    padding: 0.45em 0.7em;
+    border-radius: 0.35rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.timeline-content .badge-info {
+    background-color: var(--info-color);
+    color: #fff;
+}

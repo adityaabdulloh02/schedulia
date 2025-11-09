@@ -1,0 +1,225 @@
+@import '~bootstrap/scss/bootstrap';
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Define color variables and base styles */
+:root {
+    --primary-color: #0471ff;
+    --sidebar-bg: #212529;
+    --sidebar-text: #ecf0f1;
+    --sidebar-hover-bg: #343a40;
+    --sidebar-active-bg: #0056b3;
+    --header-bg: #212529;
+    --body-bg: #f4f7f6;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    transition: margin-left 0.3s ease;
+}
+
+/* Header */
+.header {
+    background-color: var(--header-bg);
+    padding: 10px 30px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    z-index: 1030;
+    display: flex;
+    align-items: center;
+    transition: left 0.3s ease;
+}
+
+body.sidebar-collapsed .header {
+    left: 80px;
+}
+
+.header .logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo-section img {
+    height: 45px;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.header .logo-section span {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 10px;
+    color: var(--sidebar-bg);
+}
+
+#sidebar-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--sidebar-text);
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    padding: 20px 15px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1020;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-header {
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-header img {
+    height: 50px;
+    width: auto;
+}
+
+.sidebar-header span {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--sidebar-text);
+    margin-left: 10px;
+}
+
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: var(--sidebar-text);
+    font-weight: 500;
+    padding: 12px 15px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar a i {
+    margin-right: 15px;
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar a:hover {
+    background-color: var(--sidebar-hover-bg);
+    color: #fff;
+}
+
+.sidebar a.active {
+    background-color: var(--sidebar-active-bg);
+    color: #fff;
+    font-weight: 600;
+}
+
+.sidebar a.buat-jadwal {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.sidebar a.buat-jadwal:hover {
+    background-color: #0356c7;
+}
+
+
+/* Collapsed Sidebar */
+body.sidebar-collapsed .sidebar {
+    width: 80px;
+}
+
+body.sidebar-collapsed .sidebar a {
+    justify-content: center;
+}
+
+body.sidebar-collapsed .sidebar .sidebar-link-text {
+    display: none;
+}
+
+body.sidebar-collapsed .sidebar a i {
+    margin-right: 0;
+}
+
+body.sidebar-collapsed .main-wrapper {
+    margin-left: 80px;
+}
+
+body.sidebar-collapsed .sidebar .sidebar-header span {
+    display: none;
+}
+
+
+/* Main Content Wrapper */
+.main-wrapper {
+    margin-left: 260px;
+    padding-top: 65px; /* Height of header */
+    transition: margin-left 0.3s ease;
+}
+
+.main-content {
+    padding: 20px;
+    background-color: var(--body-bg);
+    min-height: calc(100vh - 65px);
+}
+
+/* Card */
+.card {
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border: none;
+    border-radius: 10px;
+}
+
+/* Profile Dropdown */
+.profile-section .dropdown-toggle {
+    border-radius: 20px;
+}
+.profile-section .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* Logout Modal */
+.modal-content {
+    border-radius: 10px;
+}
+
+.form-group.position-relative {
+    position: relative;
+}
+
+.form-group .icon.toggle-password {
+    position: absolute;
+    right: 15px; /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Remove old layout styles */
+.layout { display: none; }
+
+@import 'dosen-dashboard.scss';

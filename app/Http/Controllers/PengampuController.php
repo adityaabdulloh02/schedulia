@@ -1,0 +1,181 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Pengampu;
+use App\Models\Dosen;
+use App\Models\Matakuliah;
+use App\Models\Kelas;
+use App\Models\Prodi; // Import Prodi model
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class PengampuController extends Controller
+{
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+        $query = Pengampu::query();
+
+        // Check if the user is logged in and has a role
+        if ($user) {
+            if ($user->role === 'dosen') {
+                if (!$user->dosen) {
+                    $pengampus = $query->whereRaw('1 = 0')->paginate(10);
+                    return view('pengampu.index', compact('pengampus'));
+                }
+                $dosenId = $user->dosen->id;
+
+                $query->where(function ($q) use ($dosenId) {
+                    $q->where('dosen_id', $dosenId) // Check primary lecturer
+                      ->orWhereHas('dosen', function ($q2) use ($dosenId) { // Check additional lecturers via pivot table
+                          $q2->where('dosen.id', $dosenId);
+                      });
+                });
+            }
+            // If the user is 'admin', no additional filtering is needed based on user ID.
+            // The query will proceed to apply search filters if any.
+        } else {
+            // If no user is logged in, perhaps redirect to login or show empty data
+            return redirect()->route('login')->with('error', 'Silakan login untuk mengakses halaman ini.');
+        }
+
+
+        if ($request->has('search')) {
+            $query->whereHas('matakuliah', function($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            })->orWhereHas('Kelas', function($q) use ($request) {
+                $q->where('nama_kelas', 'like', '%' . $request->search . '%');
+            })->orWhere('tahun_akademik', 'like', '%' . $request->search . '%');
+        }
+
+        $pengampus = $query->with(['dosen', 'matakuliah', 'Kelas', 'prodi'])->paginate(10);
+
+        return view('pengampu.index', compact('pengampus'));
+    }
+
+    public function create()
+    {
+        $prodis = Prodi::all(); // Get all prodi for dropdown
+        return view('pengampu.create', [
+            'prodis' => $prodis,
+            'matakuliahs' => [], // Initially empty
+            'dosens' => [], // Initially empty
+            'kelas' => Kelas::all(),
+            'dosens_data' => [],
+        ]);
+    }
+
+    public function getMatakuliahDosen($prodi_id)
+    {
+        $matakuliahs = Matakuliah::where('prodi_id', $prodi_id)->get();
+        $dosens = Dosen::where('prodi_id', $prodi_id)->get();
+
+        return response()->json([
+            'matakuliahs' => $matakuliahs,
+            'dosens' => $dosens,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'dosen1' => 'required|exists:dosen,id',
+            'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
+            'matakuliah_id' => 'required|exists:matakuliah,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'tahun_akademik' => 'required',
+            'prodi_id' => 'required|exists:prodi,id',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            // Buat pengampu baru
+            $pengampu = Pengampu::create([
+                'dosen_id' => $request->dosen1,
+                'matakuliah_id' => $request->matakuliah_id,
+                'kelas_id' => $request->kelas_id,
+                'tahun_akademik' => $request->tahun_akademik,
+                'prodi_id' => $request->prodi_id,
+            ]);
+
+            // Kumpulkan dosen yang valid dan siapkan data pivot
+            $dosenPivotData = [];
+            $kelasId = $request->kelas_id;
+
+            $dosenIdsFromRequest = array_filter([
+                $request->dosen1,
+                $request->dosen2,
+            ]);
+
+            foreach ($dosenIdsFromRequest as $dosenId) {
+                $dosenPivotData[$dosenId] = ['kelas_id' => $kelasId];
+            }
+
+            // Tambahkan dosen ke pengampu
+            $pengampu->dosen()->sync($dosenPivotData);
+        });
+
+        return redirect()->route('pengampu.index')->with('success', 'Data berhasil ditambahkan');
+    }
+
+    public function edit(Pengampu $pengampu)
+    {
+        $dosens = Dosen::with('prodi')->get();
+        $matakuliahs = Matakuliah::all();
+        $kelas = Kelas::all();
+        $prodis = Prodi::all(); // Get all prodi for dropdown
+        return view('pengampu.edit', compact('pengampu', 'dosens', 'matakuliahs', 'kelas', 'prodis'));
+    }
+
+    public function update(Request $request, Pengampu $pengampu)
+    {
+        $request->validate([
+            'dosen1' => 'required|exists:dosen,id',
+            'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
+            'matakuliah_id' => 'required|exists:matakuliah,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'tahun_akademik' => 'required',
+            'prodi_id' => 'required|exists:prodi,id',
+        ]);
+
+        DB::transaction(function () use ($request, $pengampu) {
+            // Update data pengampu
+            $pengampu->update([
+                'dosen_id' => $request->dosen1,
+                'matakuliah_id' => $request->matakuliah_id,
+                'kelas_id' => $request->kelas_id,
+                'tahun_akademik' => $request->tahun_akademik,
+                'prodi_id' => $request->prodi_id,
+            ]);
+
+            // Kumpulkan dosen yang valid dan siapkan data pivot
+            $dosenPivotData = [];
+            $kelasId = $request->kelas_id;
+
+            $dosenIdsFromRequest = array_filter([
+                $request->dosen1,
+                $request->dosen2,
+            ]);
+
+            foreach ($dosenIdsFromRequest as $dosenId) {
+                $dosenPivotData[$dosenId] = ['kelas_id' => $kelasId];
+            }
+
+            // Update dosen-dosen yang mengampu
+            $pengampu->dosen()->sync($dosenPivotData);
+        });
+
+        return redirect()->route('pengampu.index')->with('success', 'Data berhasil diperbarui');
+    }
+
+    public function destroy(Pengampu $pengampu)
+    {
+        $pengampu->delete();
+        return redirect()->route('pengampu.index')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function testDosenRoute()
+    {
+        return 'This is a test route for pengampu/dosen';
+    }
+}
