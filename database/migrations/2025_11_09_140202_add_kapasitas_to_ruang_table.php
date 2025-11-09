@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('ruang', function (Blueprint $table) {
-            $table->integer('kapasitas')->after('nama_ruang')->nullable();
-        });
+        if (!Schema::hasColumn('ruang', 'kapasitas')) {
+            Schema::table('ruang', function (Blueprint $table) {
+                $table->integer('kapasitas')->after('nama_ruang')->nullable();
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('ruang', function (Blueprint $table) {
-            $table->dropColumn('kapasitas');
-        });
+        if (Schema::hasColumn('ruang', 'kapasitas')) {
+            Schema::table('ruang', function (Blueprint $table) {
+                $table->dropColumn('kapasitas');
+            });
+        }
     }
 };
