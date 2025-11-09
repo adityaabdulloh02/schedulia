@@ -62,6 +62,10 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform-reqs": {
+            "ext-intl": "ignore",
+            "ext-zip": "ignore"
         }
     },
     "minimum-stability": "stable",
