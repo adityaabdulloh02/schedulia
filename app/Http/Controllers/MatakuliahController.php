@@ -6,12 +6,14 @@ use App\Models\Matakuliah;
 use App\Models\Prodi;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
 class MatakuliahController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->input('search');
-        $mataKuliah = MataKuliah::where('nama', 'like', '%'.$search.'%')->paginate(10); // Mengambil 10 data per halaman
+        $mataKuliah = Matakuliah::where(DB::raw('LOWER(nama)'), 'like', '%' . strtolower($search) . '%')->paginate(10);
 
         return view('matakuliah.index', compact('mataKuliah'));
     }
