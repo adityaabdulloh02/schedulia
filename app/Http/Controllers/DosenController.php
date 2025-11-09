@@ -66,9 +66,10 @@ class DosenController extends Controller
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%'.$search.'%')
-                    ->orWhere('nip', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%');
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(nama) LIKE ?', ['%'.$lowerSearch.'%'])
+                    ->orWhereRaw('LOWER(nip) LIKE ?', ['%'.$lowerSearch.'%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%'.$lowerSearch.'%']);
             });
         }
 

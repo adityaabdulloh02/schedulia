@@ -9,9 +9,22 @@ use Illuminate\Http\Request;
 class KelasController extends Controller
 {
     // Menampilkan daftar kelas
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('prodi')->get();
+        $query = Kelas::with('prodi');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(nama_kelas) LIKE ?', ['%'.$lowerSearch.'%'])
+                    ->orWhereHas('prodi', function ($q2) use ($lowerSearch) {
+                        $q2->whereRaw('LOWER(nama_prodi) LIKE ?', ['%'.$lowerSearch.'%']);
+                    });
+            });
+        }
+
+        $kelas = $query->get();
 
         return view('kelas.index', compact('kelas'));
     }

@@ -7,6 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="float-left">Daftar Mahasiswa</h3>
+                    <a href="{{ route('mahasiswa.create') }}" class="btn btn-primary float-right">Tambah Mahasiswa</a>
                 </div>
 
                 <div class="card-body">
@@ -15,6 +16,15 @@
                             {{ session('success') }}
                         </div>
                     @endif
+
+                    <form action="{{ route('mahasiswa.index') }}" method="GET" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan Nama atau NIM..." value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Cari</button>
+                            </div>
+                        </div>
+                    </form>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">

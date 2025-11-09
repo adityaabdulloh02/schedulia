@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 class ProdiController extends Controller
 {
     // Menampilkan daftar program studi
-    public function index()
+    public function index(Request $request)
     {
-        $prodi = Prodi::all(); // Mengambil semua data prodi
+        $query = Prodi::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(nama_prodi) LIKE ?', ['%'.$lowerSearch.'%']);
+            });
+        }
+
+        $prodi = $query->get();
 
         return view('prodi.index', compact('prodi'));
     }

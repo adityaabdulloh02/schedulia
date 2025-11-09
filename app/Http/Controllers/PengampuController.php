@@ -41,12 +41,15 @@ class PengampuController extends Controller
             return redirect()->route('login')->with('error', 'Silakan login untuk mengakses halaman ini.');
         }
 
-        if ($request->has('search')) {
-            $query->whereHas('matakuliah', function ($q) use ($request) {
-                $q->where('nama', 'like', '%'.$request->search.'%');
-            })->orWhereHas('Kelas', function ($q) use ($request) {
-                $q->where('nama_kelas', 'like', '%'.$request->search.'%');
-            })->orWhere('tahun_akademik', 'like', '%'.$request->search.'%');
+        if ($request->has('search') && !empty($request->search)) {
+            $search = strtolower($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('matakuliah', function ($q2) use ($search) {
+                    $q2->whereRaw('LOWER(nama) LIKE ?', ["%{$search}%"]);
+                })->orWhereHas('Kelas', function ($q2) use ($search) {
+                    $q2->whereRaw('LOWER(nama_kelas) LIKE ?', ["%{$search}%"]);
+                })->orWhereRaw('LOWER(tahun_akademik) LIKE ?', ["%{$search}%"]);
+            });
         }
 
         $pengampus = $query->with(['dosen', 'matakuliah', 'Kelas', 'prodi'])->paginate(10);

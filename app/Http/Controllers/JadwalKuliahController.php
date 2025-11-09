@@ -19,20 +19,22 @@ class JadwalKuliahController extends Controller
         $query = JadwalKuliah::with(['pengampu.matakuliah', 'pengampu.dosen', 'ruang', 'hari', 'jam', 'pengampu.kelas', 'pengampu.prodi']);
 
         // Search functionality
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->whereHas('pengampu.matakuliah', function ($q) use ($searchTerm) {
-                $q->where('nama', 'like', '%'.$searchTerm.'%');
-            })->orWhereHas('pengampu.dosen', function ($q) use ($searchTerm) {
-                $q->where('nama', 'like', '%'.$searchTerm.'%');
-            })->orWhereHas('ruang', function ($q) use ($searchTerm) {
-                $q->where('nama_ruang', 'like', '%'.$searchTerm.'%');
-            })->orWhereHas('hari', function ($q) use ($searchTerm) {
-                $q->where('nama_hari', 'like', '%'.$searchTerm.'%');
-            })->orWhereHas('jam', function ($q) use ($searchTerm) {
-                $q->where('jam_mulai', 'like', '%'.$searchTerm.'%');
-            })->orWhereHas('pengampu.kelas', function ($q) use ($searchTerm) {
-                $q->where('nama_kelas', 'like', '%'.$searchTerm.'%');
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = strtolower($request->input('search'));
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('pengampu.matakuliah', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(nama) LIKE ?', ["%{$searchTerm}%"]);
+                })->orWhereHas('pengampu.dosen', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(nama) LIKE ?', ["%{$searchTerm}%"]);
+                })->orWhereHas('ruang', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(nama_ruang) LIKE ?', ["%{$searchTerm}%"]);
+                })->orWhereHas('hari', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(nama_hari) LIKE ?', ["%{$searchTerm}%"]);
+                })->orWhereHas('jam', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(jam_mulai) LIKE ?', ["%{$searchTerm}%"]);
+                })->orWhereHas('pengampu.kelas', function ($q2) use ($searchTerm) {
+                    $q2->whereRaw('LOWER(nama_kelas) LIKE ?', ["%{$searchTerm}%"]);
+                });
             });
         }
 

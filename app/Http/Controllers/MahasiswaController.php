@@ -29,9 +29,20 @@ class MahasiswaController extends Controller
     }
 
     // Menampilkan daftar mahasiswa (untuk admin)
-    public function index()
+    public function index(Request $request)
     {
-        $mahasiswas = Mahasiswa::with('prodi', 'kelas')->paginate(10);
+        $query = Mahasiswa::with('prodi', 'kelas');
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(nama) LIKE ?', ['%'.$lowerSearch.'%'])
+                    ->orWhereRaw('LOWER(nim) LIKE ?', ['%'.$lowerSearch.'%']);
+            });
+        }
+
+        $mahasiswas = $query->paginate(10)->appends($request->query());
 
         return view('mahasiswa.index', compact('mahasiswas'));
     }

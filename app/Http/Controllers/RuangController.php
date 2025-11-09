@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 class RuangController extends Controller
 {
     // Menampilkan daftar ruang
-    public function index()
+    public function index(Request $request)
     {
-        $ruang = Ruang::all();
+        $query = Ruang::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $lowerSearch = strtolower($search);
+                $q->whereRaw('LOWER(nama_ruang) LIKE ?', ['%'.$lowerSearch.'%']);
+            });
+        }
+
+        $ruang = $query->get();
 
         return view('ruang.index', compact('ruang'));
     }
