@@ -133,3 +133,14 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
+
+use App\Http\Controllers\PusherController;
+use App\Events\TestAblyEvent;
+
+Route::get('/pusher', [PusherController::class, 'index'])->name('pusher.test');
+Route::post('/pusher/send', [PusherController::class, 'sendMessage'])->name('pusher.send');
+
+Route::get('/test-ably', function () {
+    TestAblyEvent::dispatch('Hello from Ably!');
+    return 'Ably event dispatched!';
+});
