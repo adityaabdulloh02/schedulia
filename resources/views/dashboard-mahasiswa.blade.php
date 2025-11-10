@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateScheduleHighlight, 60000);
 
     // Listen for new announcements
-    const kelasId = {{ $mahasiswa->kelas_id ?? 'null' }};
+    const kelasId = {{ $mahasiswa->kelas_id ? (int) $mahasiswa->kelas_id : 'null' }};
     if (kelasId) {
         window.Echo.private(`kelas.${kelasId}`)
             .listen('pengumuman.created', (e) => {
