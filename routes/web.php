@@ -133,3 +133,8 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
+
+use App\Http\Controllers\PusherController;
+
+Route::get('/pusher', [PusherController::class, 'index'])->name('pusher.test');
+Route::post('/pusher/send', [PusherController::class, 'sendMessage'])->name('pusher.send');
