@@ -1,6 +1,6 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "buildCommand": "composer install --optimize-autoloader --no-scripts --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip && npm install && npm run build"
+    "buildCommand": "composer install --optimize-autoloader --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan key:generate --ansi && npm install && npm run build && php artisan package:discover --ansi && php artisan filament:upgrade && php artisan migrate --force --seed"
   }
 }
