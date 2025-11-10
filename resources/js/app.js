@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Listen for new announcements
     if (typeof KELAS_ID !== 'undefined' && KELAS_ID) {
         window.Echo.private(`kelas.${KELAS_ID}`)
-            .listen('.App\\Events\\PengumumanCreated', (e) => {
+            .listen('pengumuman.created', (e) => {
                 console.log('Event received:', e); // For debugging
 
                 const pengumuman = e.pengumuman;
