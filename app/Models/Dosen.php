@@ -17,6 +17,7 @@ class Dosen extends Model
         'email',
         'prodi_id',
         'foto_profil',
+        'user_id',
     ];
 
     protected $with = ['prodi'];
