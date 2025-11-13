@@ -1,6 +1,3 @@
 {
-  "$schema": "https://railway.com/railway.schema.json",
-  "build": {
-    "buildCommand": "curl -sS https://getcomposer.org/installer | php && php composer.phar install --optimize-autoloader --no-interaction --ignore-platform-req=ext-intl --ignore-platform-req=ext-zip && npm install && npm run build"
-  }
+  "$schema": "https://railway.com/railway.schema.json"
 }
