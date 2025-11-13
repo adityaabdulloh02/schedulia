@@ -1,19 +1,21 @@
-I have created a new test file `tests/Feature/AblyRealBroadcastTest.php` that attempts to broadcast a real event via Ably.
+I have updated `c:\xampp\htdocs\schedulia\app\Providers\AppServiceProvider.php` to force HTTPS for asset and URL generation when the application is in production mode.
 
-I also updated your `phpunit.xml` file to include:
-```xml
-        <env name="BROADCAST_DRIVER" value="ably"/>
-        <env name="ABLY_KEY" value="your_ably_api_key"/>
-```
-This ensures that when you run your tests, Laravel will attempt to use Ably for broadcasting.
+To fully resolve the mixed content warnings, please perform the following steps:
 
-**Next Steps:**
-
-1.  **Replace `your_ably_api_key`:** You need to replace `"your_ably_api_key"` in `phpunit.xml` with your actual Ably API key. You can find this in your Ably dashboard.
-2.  **Run the test:** After updating the API key, run the test using:
-    ```bash
-    php artisan test tests/Feature/AblyRealBroadcastTest.php
+1.  **Open your `.env` file** in the project root (`c:\xampp\htdocs\schedulia\.env`).
+2.  **Update the `APP_URL` variable** to use `https`:
     ```
-3.  **Verify on Ably Dashboard:** Once the test runs, go to your Ably dashboard, navigate to the "Debugger" section, and subscribe to the `test-channel`. You should see the message "Hello Ably from Real Test!" appear.
+    APP_URL=https://schedulia.up.railway.app
+    ```
+3.  **Add or update the `SESSION_SECURE_COOKIE` variable** to `true`:
+    ```
+    SESSION_SECURE_COOKIE=true
+    ```
+4.  **Ensure `APP_ENV` is set to `production`**:
+    ```
+    APP_ENV=production
+    ```
+5.  **Clear your application's cache** after making these changes. You can typically do this by running `php artisan config:clear` and `php artisan cache:clear` on your server.
+6.  **Redeploy your application** to Railway if necessary, to ensure the new `.env` variables are loaded.
 
-This test will help you confirm that your Ably integration is working correctly on Railway.
+Once these steps are completed, the mixed content warnings should be resolved.

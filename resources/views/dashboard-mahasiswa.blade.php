@@ -283,7 +283,7 @@
                 <div class="widget-header">
                     <h2 class="widget-title"><i class="fas fa-bullhorn mr-2"></i>Pengumuman Terbaru</h2>
                 </div>
-                <div id="announcement-list" class="pengumuman-list">
+                <div class="pengumuman-list">
                     @if(isset($pengumuman) && $pengumuman->count() > 0)
                         @foreach($pengumuman as $item)
                             @php
@@ -309,7 +309,7 @@
                             </div>
                         @endforeach
                     @else
-                        <p class="text-muted" id="no-announcement-message">Tidak ada pengumuman penting untuk saat ini.</p>
+                        <p class="text-muted">Tidak ada pengumuman penting untuk saat ini.</p>
                     @endif
                 </div>
             </div>
@@ -341,31 +341,17 @@
     </div>
 </div>
 
-@endsection
-
-@push('scripts')
-<script>
-    // Pass kelas_id to JavaScript
-    const KELAS_ID = {{ $mahasiswa->kelas_id ?? 'null' }};
-</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Existing scripts...
     function updateClock() {
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
-        const clockElement = document.getElementById('digital-clock');
-        if (clockElement) {
-            clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-        }
+        document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
 
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateElement = document.getElementById('digital-date');
-        if (dateElement) {
-            dateElement.textContent = now.toLocaleDateString('id-ID', options);
-        }
+        document.getElementById('digital-date').textContent = now.toLocaleDateString('id-ID', options);
     }
 
     function updateScheduleHighlight() {
@@ -389,73 +375,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initial calls
     updateClock();
     updateScheduleHighlight();
-
-    // Set intervals
     setInterval(updateClock, 1000);
-    setInterval(updateScheduleHighlight, 60000);
-
-    // Listen for new announcements
-    if (KELAS_ID) {
-        window.Echo.private(`kelas.${KELAS_ID}`)
-            .listen('pengumuman.created', (e) => {
-                console.log('Event received:', e); // For debugging
-
-                const pengumuman = e.pengumuman;
-
-                // Show a toast notification
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'info',
-                    title: `Pengumuman Baru: ${pengumuman.matakuliah}`,
-                    html: `<strong>Tipe:</strong> ${pengumuman.tipe.charAt(0).toUpperCase() + pengumuman.tipe.slice(1)}<br>
-                           <strong>Pesan:</strong> ${pengumuman.pesan}<br>
-                           <strong>Oleh:</strong> ${pengumuman.dosen}<br>
-                           <small>${pengumuman.created_at}</small>`,
-                    showConfirmButton: false,
-                    timer: 7000, // Increased timer for more info
-                    timerProgressBar: true
-                });
-
-                // Create the new announcement element
-                const newAnnouncement = document.createElement('div');
-                let alertClass = 'alert-info';
-                if (pengumuman.tipe === 'perubahan') {
-                    alertClass = 'alert-warning';
-                } else if (pengumuman.tipe === 'pembatalan') {
-                    alertClass = 'alert-danger';
-                }
-                newAnnouncement.className = `alert ${alertClass}`;
-                newAnnouncement.setAttribute('role', 'alert');
-
-                newAnnouncement.innerHTML = `
-                    <h5 class="alert-heading">
-                        ${pengumuman.matakuliah}
-                        <span class="badge badge-secondary">${pengumuman.tipe.charAt(0).toUpperCase() + pengumuman.tipe.slice(1)}</span>
-                    </h5>
-                    <p>${pengumuman.pesan}</p>
-                    <hr>
-                    <p class="mb-0 text-right">
-                        <small>
-                            Oleh: ${pengumuman.dosen} | Baru saja
-                        </small>
-                    </p>
-                `;
-
-                // Prepend to the list
-                const pengumumanList = document.getElementById('announcement-list');
-                if (pengumumanList) {
-                    const noAnnouncement = document.getElementById('no-announcement-message');
-                    if (noAnnouncement) {
-                        noAnnouncement.remove();
-                    }
-                    pengumumanList.prepend(newAnnouncement);
-                }
-            });
-    }
+    setInterval(updateScheduleHighlight, 60000); // Check every minute
 });
 </script>
-@endpush
+@endsection

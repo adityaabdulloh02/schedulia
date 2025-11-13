@@ -14,11 +14,8 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "@ably/laravel-echo": "^1.0.6",
-        "ably": "^1.2.50",
         "appwrite": "^21.4.0",
         "chart.js": "^4.5.1",
-        "laravel-echo": "^2.2.6",
         "sweetalert2": "^11.26.3"
     }
 }
