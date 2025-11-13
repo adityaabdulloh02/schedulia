@@ -22,7 +22,7 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Nama Mahasiswa</th>
-                                        <th>NIM</th>
+                                        <th>NPM</th>
                                         <th>Program Studi</th>
                                         <th>Mata Kuliah</th>
                                         <th>SKS</th>
@@ -35,7 +35,7 @@
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $pengambilan->mahasiswa->nama }}</td>
-                                            <td>{{ $pengambilan->mahasiswa->nim }}</td>
+                                            <td>{{ $pengambilan->mahasiswa->npm }}</td>
                                             <td>{{ $pengambilan->mahasiswa->prodi->nama_prodi }}</td>
                                             <td>{{ $pengambilan->matakuliah->nama }}</td>
                                             <td>{{ $pengambilan->matakuliah->sks }}</td>

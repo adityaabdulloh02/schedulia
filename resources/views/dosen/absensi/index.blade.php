@@ -26,9 +26,9 @@
                                 <div class="col-md-4 mb-4">
                                     <div class="card h-100">
                                         <div class="card-body">
-                                            <h5 class="card-title">{{ $p->matakuliah->nama }}</h5>
+                                            <h5 class="card-title">{{ $p->matakuliah->nama_matakuliah }}</h5>
                                             <p class="card-text">
-                                                <strong>Kode:</strong> {{ $p->matakuliah->kode_mk }} <br>
+                                                <strong>Kode:</strong> {{ $p->matakuliah->kode_matakuliah }} <br>
                                                 <strong>Prodi:</strong> {{ $p->prodi->nama_prodi }} <br>
                                                 <strong>Kelas:</strong> {{ $p->kelas->nama_kelas }}
                                             </p>

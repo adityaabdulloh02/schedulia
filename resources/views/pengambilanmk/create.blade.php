@@ -135,29 +135,24 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
+                                    <th><i class="fas fa-tag me-2"></i>Kode MK</th>
                                     <th><i class="fas fa-book me-2"></i>Nama Mata Kuliah</th>
-                                    <th><i class="fas fa-chalkboard-teacher me-2"></i>Dosen Pengampu</th>
-                                    <th><i class="fas fa-university me-2"></i>Kelas</th>
                                     <th><i class="fas fa-credit-card me-2"></i>SKS</th>
                                     <th><i class="fas fa-calendar-alt me-2"></i>Semester</th>
                                     <th class="text-center"><i class="fas fa-cogs me-2"></i>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($pengampuTersedia as $pengampu)
+                                @forelse($matakuliahTersedia as $matakuliah)
                                 <tr>
-                                    <td>
-                                        <strong>{{ $pengampu->matakuliah->nama }}</strong><br>
-                                        <small class="text-muted">{{ $pengampu->matakuliah->kode_mk }}</small>
-                                    </td>
-                                    <td>{!! $pengampu->dosen->pluck('nama')->join('<br>') !!}</td>
-                                    <td>{{ $pengampu->kelas->nama_kelas }}</td>
-                                    <td>{{ $pengampu->matakuliah->sks }}</td>
-                                    <td>{{ $pengampu->matakuliah->semester }}</td>
+                                    <td>{{ $matakuliah->kode_mk }}</td>
+                                    <td>{{ $matakuliah->nama }}</td>
+                                    <td>{{ $matakuliah->sks }}</td>
+                                    <td>{{ $matakuliah->semester }}</td>
                                     <td class="text-center">
-                                        @if(in_array($pengampu->id, $diambilPengampuIds))
+                                        @if(in_array($matakuliah->id, $diambilMKIds))
                                             {{-- Form untuk Lepas Mata Kuliah --}}
-                                            <form action="{{ route('pengambilan-mk.destroy', $pengampu->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin melepas mata kuliah ini?');">
+                                            <form action="{{ route('pengambilan-mk.destroy', $matakuliah->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin melepas mata kuliah ini?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Lepas</button>
@@ -166,7 +161,7 @@
                                             {{-- Form untuk Ambil Mata Kuliah --}}
                                             <form action="{{ route('pengambilan-mk.store') }}" method="POST">
                                                 @csrf
-                                                <input type="hidden" name="pengampu_id" value="{{ $pengampu->id }}">
+                                                <input type="hidden" name="matakuliah_id" value="{{ $matakuliah->id }}">
                                                 <button type="submit" class="btn btn-primary btn-sm">Ambil</button>
                                             </form>
                                         @endif
@@ -174,9 +169,9 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="empty-state">
+                                    <td colspan="5" class="empty-state">
                                         <i class="fas fa-box-open"></i>
-                                        <p class="mt-3">Tidak ada kelas yang tersedia untuk program studi dan semester Anda saat ini.</p>
+                                        <p class="mt-3">Tidak ada mata kuliah yang tersedia untuk program studi Anda.</p>
                                         <p>Silakan hubungi bagian akademik untuk informasi lebih lanjut.</p>
                                     </td>
                                 </tr>

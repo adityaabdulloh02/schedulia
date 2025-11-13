@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use App\Models\Matakuliah;
-use App\Models\Pengampu;
 use App\Models\PengambilanMK; // Add this line
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -35,48 +34,43 @@ class PengambilanMKController extends Controller
         $mahasiswa = Auth::user()->mahasiswa;
 
         // Ambil ID matakuliah yang sudah diambil dan divalidasi (status 'approved') oleh mahasiswa
-        $approvedPengampuIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+        $approvedMKIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
             ->where('status', 'approved')
-            ->pluck('pengampu_id')
+            ->pluck('matakuliah_id')
             ->toArray();
 
         // Ambil semua matakuliah yang sesuai dengan prodi mahasiswa dan semester mahasiswa saat ini,
         // dan yang belum diambil serta divalidasi
-        $pengampuTersedia = Pengampu::where('prodi_id', $mahasiswa->prodi_id)
-            ->whereHas('matakuliah', function ($query) use ($mahasiswa) {
-                $query->where('semester', $mahasiswa->semester);
-            })
-            ->whereNotIn('id', $approvedPengampuIds)
-            ->with(['matakuliah', 'dosen', 'kelas'])
+        $matakuliahTersedia = Matakuliah::where('prodi_id', $mahasiswa->prodi_id)
+            ->where('semester', $mahasiswa->semester)
+            ->whereNotIn('id', $approvedMKIds) // Exclude approved courses
             ->get();
 
         // Ambil ID matakuliah yang sudah diambil oleh mahasiswa (termasuk pending)
         // Ini mungkin tidak lagi diperlukan di view jika kita sudah memfilter matakuliahTersedia
         // Namun, jika view masih menggunakannya untuk menampilkan status "sudah diambil" untuk pending, kita bisa biarkan.
-        $diambilPengampuIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)->pluck('pengampu_id')->toArray();
+        $diambilMKIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)->pluck('matakuliah_id')->toArray();
 
-        return view('pengambilanmk.create', compact('pengampuTersedia', 'diambilPengampuIds'));
+        return view('pengambilanmk.create', compact('matakuliahTersedia', 'diambilMKIds'));
     }
 
     public function storeForStudent(Request $request)
     {
         $request->validate([
-            'pengampu_id' => 'required|exists:pengampu,id',
+            'matakuliah_id' => 'required|exists:matakuliah,id',
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
-        $pengampu = Pengampu::find($request->pengampu_id);
 
         // Cek apakah sudah diambil
         $isExist = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
-            ->where('pengampu_id', $request->pengampu_id)
+            ->where('matakuliah_id', $request->matakuliah_id)
             ->exists();
 
         if (! $isExist) {
             PengambilanMK::create([
                 'mahasiswa_id' => $mahasiswa->id,
-                'pengampu_id' => $pengampu->id,
-                'matakuliah_id' => $pengampu->matakuliah_id,
+                'matakuliah_id' => $request->matakuliah_id,
                 'semester' => $mahasiswa->semester, // Asumsi semester diambil dari data mahasiswa
                 'status' => 'pending',
             ]);
@@ -87,12 +81,12 @@ class PengambilanMKController extends Controller
         return redirect()->route('pengambilan-mk.create')->with('error', 'Mata kuliah sudah Anda ambil sebelumnya.');
     }
 
-    public function destroyForStudent($pengampu_id)
+    public function destroyForStudent($matakuliah_id)
     {
         $mahasiswa = Auth::user()->mahasiswa;
 
         $pengambilanMK = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
-            ->where('pengampu_id', $pengampu_id)
+            ->where('matakuliah_id', $matakuliah_id)
             ->first();
 
         if ($pengambilanMK) {

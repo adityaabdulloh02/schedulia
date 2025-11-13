@@ -11,7 +11,6 @@ class PengambilanMK extends Pivot
     protected $fillable = [
         'mahasiswa_id',
         'matakuliah_id',
-        'pengampu_id',
         'semester',
         'tahun_akademik',
         'status',
@@ -25,10 +24,5 @@ class PengambilanMK extends Pivot
     public function matakuliah()
     {
         return $this->belongsTo(Matakuliah::class);
-    }
-
-    public function pengampu()
-    {
-        return $this->belongsTo(Pengampu::class);
     }
 }

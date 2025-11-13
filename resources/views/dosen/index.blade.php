@@ -18,7 +18,11 @@
         
 
         <!-- Tombol Tambah Data dan Search -->
-        <div class="d-flex justify-content-end align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-primary" onclick="window.location.href='{{ route('dosen.create') }}'">
+                + Tambah Data
+            </button>
+
             <form action="{{ route('dosen.index') }}" method="GET" class="d-flex">
                 <input type="text" name="search" class="form-control" placeholder="Pencarian..." value="{{ request('search') }}">
                 <button type="submit" class="btn btn-primary ms-2">Cari</button>

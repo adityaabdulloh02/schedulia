@@ -26,6 +26,7 @@ class JamController extends Controller
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'durasi' => 'nullable|integer|min:10|max:240',
+            'waktu_shalat' => 'boolean',
         ]);
 
         try {
@@ -36,6 +37,7 @@ class JamController extends Controller
                 'jam_mulai' => $jamMulai,
                 'jam_selesai' => $jamSelesai,
                 'durasi' => $jamMulai->diffInMinutes($jamSelesai),
+                'waktu_shalat' => $request->boolean('waktu_shalat', false),
             ]);
 
             return redirect()->route('jam.index')
@@ -60,6 +62,7 @@ class JamController extends Controller
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'durasi' => 'nullable|integer|min:10|max:240',
+            'waktu_shalat' => 'boolean',
         ]);
 
         try {
@@ -72,6 +75,7 @@ class JamController extends Controller
                 'jam_mulai' => $jamMulai,
                 'jam_selesai' => $jamSelesai,
                 'durasi' => $jamMulai->diffInMinutes($jamSelesai),
+                'waktu_shalat' => $request->boolean('waktu_shalat', false),
             ]);
 
             return redirect()->route('jam.index')
