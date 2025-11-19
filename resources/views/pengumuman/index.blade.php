@@ -5,9 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary">
                     <div class="d-flex align-items-center">
-                        <h3 class="me-3">Pengumuman</h3>
+                        <h3 class="me-3 text-white">Pengumuman</h3>
                         <a href="{{ route('jadwaldosen.index') }}" class="btn btn-success btn-sm">Buat Pengumuman</a>
                     </div>
                     <form action="{{ route('pengumuman.index') }}" method="GET" class="d-flex">
@@ -41,7 +41,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data pengumuman yang tersedia.</td>
+                                    <td colspan="5" class="text-center">Tidak ada data pengumuman yang tersedia.</td>
                                 </tr>
                                 @endforelse
                             </tbody>

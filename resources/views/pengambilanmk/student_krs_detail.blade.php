@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h3>KRS Mahasiswa: {{ $mahasiswa->nama }} ({{ $mahasiswa->nim }})</h3>
+                    <h3 style="color: white;">KRS Mahasiswa: {{ $mahasiswa->nama }} ({{ $mahasiswa->nim }})</h3>
                     <div>
                         <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary">Kembali ke Daftar Mahasiswa</a>
                         <form action="{{ route('admin.pengambilanmk.approveAll', $mahasiswa->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui semua mata kuliah yang tertunda untuk mahasiswa ini?');">

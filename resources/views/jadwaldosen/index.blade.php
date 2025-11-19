@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h3 class="me-3">Jadwal Dosen</h3>
+                        <h3 class="me-3" style="color: white;">Jadwal Dosen</h3>
                         <a href="{{ route('jadwaldosen.exportPDF', ['search' => request('search')]) }}" class="btn btn-success btn-sm">Ekspor ke PDF</a>
                     </div>
                     <form action="{{ route('jadwaldosen.index') }}" method="GET" class="d-flex">
@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>{{ $j->hari->nama_hari ?? '-' }}</td>
                                     <td>
-                                        {{ $j->jam_mulai ?? '-' }} - {{ $j->jam_selesai ?? '-' }}
+                                        {{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') ?? '-' }} - {{ \Carbon\Carbon::parse($j->jam_selesai)->format('H:i') ?? '-' }}
                                     </td>
                                     <td>
                                         {{ $j->pengampu->matakuliah->nama ?? '-' }}

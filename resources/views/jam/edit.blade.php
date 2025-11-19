@@ -8,14 +8,14 @@
         @method('PUT')
         <div class="form-group">
             <label for="jam_mulai">Jam Mulai</label>
-            <input type="time" name="jam_mulai" id="jam_mulai" class="form-control @error('jam_mulai') is-invalid @enderror" value="{{ old('jam_mulai', $jam->jam_mulai) }}">
+            <input type="time" name="jam_mulai" id="jam_mulai" class="form-control @error('jam_mulai') is-invalid @enderror" value="{{ old('jam_mulai', \Carbon\Carbon::parse($jam->jam_mulai)->format('H:i')) }}">
             @error('jam_mulai')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
         <div class="form-group">
             <label for="jam_selesai">Jam Selesai</label>
-            <input type="time" name="jam_selesai" id="jam_selesai" class="form-control @error('jam_selesai') is-invalid @enderror" value="{{ old('jam_selesai', $jam->jam_selesai) }}">
+            <input type="time" name="jam_selesai" id="jam_selesai" class="form-control @error('jam_selesai') is-invalid @enderror" value="{{ old('jam_selesai', \Carbon\Carbon::parse($jam->jam_selesai)->format('H:i')) }}">
             @error('jam_selesai')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Tambah Data Dosen</h5>
                     <a href="{{ route('dosen.index') }}" class="btn btn-secondary">
                         Kembali
@@ -35,7 +35,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('dosen.store') }}" method="POST">
+                    <form action="{{ route('dosen.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -44,6 +44,17 @@
                                    id="nama" name="nama" value="{{ old('nama') }}"
                                    placeholder="Masukkan nama dosen">
                             @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="foto_profil" class="form-label">Foto Profil</label>
+                            <input type="file" class="form-control @error('foto_profil') is-invalid @enderror"
+                                   id="foto_profil" name="foto_profil">
+                            @error('foto_profil')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>

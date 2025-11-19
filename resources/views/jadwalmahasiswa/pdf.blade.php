@@ -30,7 +30,7 @@
                 <td>{{ $j->hari->nama_hari ?? '-' }}</td>
                 <td>
                     @if ($j->jam_mulai && $j->jam_selesai)
-                        {{ $j->jam_mulai }} - {{ $j->jam_selesai }}
+                        {{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($j->jam_selesai)->format('H:i') }}
                     @else
                         -
                     @endif

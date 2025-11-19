@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Tambah Data Program Studi</h5>
                     <a href="{{ route('prodi.index') }}" class="btn btn-secondary">
                         Kembali

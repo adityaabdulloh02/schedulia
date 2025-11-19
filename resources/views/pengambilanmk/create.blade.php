@@ -118,8 +118,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h3 class="mb-2 mb-md-0"><i class="fas fa-plus-circle me-2"></i>Ambil Mata Kuliah</h3>
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                    <h3 class="mb-2 mb-md-0" style="color: white !important;"><i class="fas fa-plus-circle me-2"></i>Ambil Mata Kuliah</h3>
                     <a href="{{ route('krs.index') }}" class="btn btn-secondary mb-2 mb-md-0">Lihat KRS Saya</a>
                 </div>
 

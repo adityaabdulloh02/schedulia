@@ -7,9 +7,9 @@
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Data Dosen</h4>
-                    <button class="btn btn-primary" onclick="window.location.href='{{ route('dosen.create') }}'">
+                    <!--  <button class="btn btn-primary" onclick="window.location.href='{{ route('dosen.create') }}'">
                         <i class="fas fa-plus me-2"></i>Tambah Data
-                    </button>
+                    </button>-->
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -82,7 +82,11 @@
                                         <td class="text-center">{{ $index + 1 + ($dosen->currentPage() - 1) * $dosen->perPage() }}</td>
                                         <td>
                                             @if($d->foto_profil)
-                                                <img src="{{ asset('storage/foto_profil/' . $d->foto_profil) }}" alt="Foto Profil" class="img-thumbnail" width="50">
+                                                @if (strpos($d->foto_profil, '/') !== false)
+                                                    <img src="{{ asset('storage/' . $d->foto_profil) }}" alt="Foto Profil" class="img-thumbnail" width="50">
+                                                @else
+                                                    <img src="{{ asset('storage/foto_profil/' . $d->foto_profil) }}" alt="Foto Profil" class="img-thumbnail" width="50">
+                                                @endif
                                             @else
                                                 <img src="{{ asset('images/default-profil.svg') }}" alt="Default Foto Profil" class="img-thumbnail" width="50">
                                             @endif

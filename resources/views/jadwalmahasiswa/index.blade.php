@@ -177,7 +177,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h3 class="mb-2 mb-md-0"><i class="fas fa-calendar-alt me-2"></i>Jadwal Kuliah Mahasiswa</h3>
+                    <h3 class="mb-2 mb-md-0 text-white"><i class="fas fa-calendar-alt me-2"></i>Jadwal Kuliah Mahasiswa</h3>
                     <div class="d-flex align-items-center flex-wrap">
                         
                         <a href="{{ route('jadwalmahasiswa.exportPDF', ['search' => request('search'), 'day_filter' => request('day_filter')]) }}" class="btn btn-success mb-2 mb-md-0"><i class="fas fa-file-pdf me-2"></i>Ekspor PDF</a>
@@ -203,7 +203,7 @@
                                     <td>{{ $j->hari->nama_hari ?? '-' }}</td>
                                     <td>
                                         @if ($j->jam_mulai && $j->jam_selesai)
-                                            <span class="badge bg-primary text-white">{{ $j->jam_mulai }} - {{ $j->jam_selesai }}</span>
+                                            <span class="badge bg-primary text-white">{{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($j->jam_selesai)->format('H:i') }}</span>
                                         @else
                                             -
                                         @endif

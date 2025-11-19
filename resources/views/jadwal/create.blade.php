@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Tambah Jadwal Kuliah</h3>
+                    <h3 class="card-title text-white">Tambah Jadwal Kuliah</h3>
                 </div>
                 <div class="card-body">
                     @if(session('error'))

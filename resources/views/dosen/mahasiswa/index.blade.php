@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Daftar Mahasiswa</div>
+                <div class="card-header" style="background-color: #343a40; color: white; font-size: 1.25rem;">Daftar Mahasiswa</div>
 
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">

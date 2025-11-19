@@ -4,19 +4,29 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h1 class="h3 text-gray-800">Ambil Absensi</h1>
-        <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Buat Jadwal Kuliah</a>
     </div>
-    <p class="mb-4">
-        Mata Kuliah: <strong>{{ $pengampu->matakuliah->nama_matakuliah }}</strong> ({{ $pengampu->kelas->nama_kelas }})
+    <p class="mb-1">
+        Mata Kuliah: <strong>{{ $pengampu->matakuliah->nama }}</strong>
     </p>
+    @if($selectedJadwalKuliah)
+        <p class="mb-1">
+            Jadwal: <strong>{{ optional($selectedJadwalKuliah->hari)->nama_hari }}, {{ \Carbon\Carbon::parse($selectedJadwalKuliah->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($selectedJadwalKuliah->jam_selesai)->format('H:i') }}</strong>
+        </p>
+        <p class="mb-4">
+            Ruang: <strong>{{ optional($selectedJadwalKuliah->ruang)->nama_ruang }}</strong>
+        </p>
+    @endif
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Mahasiswa</h6>
+        <div class="card-header py-3 bg-primary">
+            <h6 class="m-0 font-weight-bold text-white">Daftar Mahasiswa</h6>
         </div>
         <div class="card-body">
             <form action="{{ route('dosen.absensi.store', $pengampu->id) }}" method="POST">
                 @csrf
+                @if($selectedJadwalKuliah)
+                    <input type="hidden" name="jadwal_kuliah_id" value="{{ $selectedJadwalKuliah->id }}">
+                @endif
                 <div class="form-group row">
                     <label for="pertemuan" class="col-sm-2 col-form-label">Pertemuan Ke-</label>
                     <div class="col-sm-4">
@@ -30,30 +40,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Jadwal Kuliah</label>
-                    <div class="col-sm-10">
-                        @if ($selectedJadwalKuliah)
-                            <p class="form-control-static">
-                                @if ($selectedJadwalKuliah->jam && $selectedJadwalKuliah->hari && $selectedJadwalKuliah->ruang)
-                                    <strong>{{ $selectedJadwalKuliah->hari->nama_hari }}</strong>,
-                                    {{ \Carbon\Carbon::parse($selectedJadwalKuliah->jam->jam_mulai)->format('H:i') }} -
-                                    {{ \Carbon\Carbon::parse($selectedJadwalKuliah->jam->jam_selesai)->format('H:i') }}
-                                    (Ruang: {{ $selectedJadwalKuliah->ruang->nama_ruang }})
-                                @else
-                                    <span class="text-danger">Informasi jadwal tidak lengkap.</span>
-                                @endif
-                            </p>
-                            <input type="hidden" name="jadwal_kuliah_id" value="{{ $selectedJadwalKuliah->id }}">
-                        @else
-                            <p class="form-control-static text-danger">Tidak ada jadwal kuliah yang cocok untuk saat ini.</p>
-                            <input type="hidden" name="jadwal_kuliah_id" value="">
-                        @endif
-                        @error('jadwal_kuliah_id')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+                
                 <hr>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -108,4 +95,39 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        const deleteForms = document.querySelectorAll('.delete-form');
+
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Anda tidak akan dapat mengembalikan ini!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form if confirmed
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endpush
 

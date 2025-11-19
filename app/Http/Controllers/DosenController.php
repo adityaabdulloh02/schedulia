@@ -30,10 +30,15 @@ class DosenController extends Controller
             $query->where('dosen.id', $dosen->id);
         })->pluck('id');
 
-        // Ambil semua jadwal kuliah untuk dosen ini, diurutkan berdasarkan hari dan jam
-        $semuaJadwal = JadwalKuliah::whereIn('pengampu_id', $pengampuIds)
+        // Get current day name and find its ID
+        $hariIni = Carbon::now()->locale('id')->dayName;
+        $hari = Hari::where('nama_hari', $hariIni)->first();
+        $hariId = $hari ? $hari->id : -1; // Use -1 if day not found to avoid errors
+
+        // Ambil jadwal kuliah untuk dosen ini pada hari ini
+        $jadwalHariIni = JadwalKuliah::whereIn('pengampu_id', $pengampuIds)
+            ->where('hari_id', $hariId) // Filter by current day
             ->with(['pengampu.matakuliah', 'ruang', 'kelas', 'hari'])
-            ->orderBy('hari_id', 'asc')
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
@@ -58,7 +63,7 @@ class DosenController extends Controller
                 return $students->count();
             });
 
-        return view('dashboard-dosen', compact('dosen', 'semuaJadwal', 'totalCourses', 'mahasiswaPerKelas'));
+        return view('dashboard-dosen', compact('dosen', 'jadwalHariIni', 'totalCourses', 'mahasiswaPerKelas'));
     }
 
     // Tampilkan data dosen
@@ -110,10 +115,21 @@ class DosenController extends Controller
             'nama' => 'required',
             'email' => 'required|email|unique:dosen,email',
             'prodi_id' => 'required|exists:prodi,id',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Added validation
         ]);
 
         DB::transaction(function () use ($request) {
-            $dosen = Dosen::create($request->all());
+            $data = $request->all(); // Get all request data
+
+            if ($request->hasFile('foto_profil')) {
+                $fileName = time().'.'.$request->foto_profil->extension();
+                $request->foto_profil->storeAs('public/foto_profil', $fileName);
+                $data['foto_profil'] = $fileName;
+            } else {
+                $data['foto_profil'] = null; // Ensure it's null if no file is uploaded
+            }
+
+            $dosen = Dosen::create($data); // Create Dosen with processed data
 
             User::create([
                 'name' => $dosen->nama,
@@ -194,8 +210,8 @@ class DosenController extends Controller
     public function profil()
     {
         $dosen = auth()->user()->dosen; // Assuming a 'dosen' relationship on the User model
-
-        return view('dosen.profil', compact('dosen'));
+        $hide_sidebar = true;
+        return view('dosen.profil', compact('dosen', 'hide_sidebar'));
     }
 
     public function editProfile()
@@ -294,15 +310,17 @@ class DosenController extends Controller
             $query->where('pengampu_id', $pengampu->id);
         })->with('prodi')->get(); // Eager load prodi for display
 
-        // Get all JadwalKuliah for this Pengampu
+        // Get all JadwalKuliah for this Pengampu, ensuring they have required relations
         $jadwalKuliahs = JadwalKuliah::where('pengampu_id', $pengampu->id)
-                                    ->with('hari', 'jam', 'ruang')
+                                    ->whereHas('hari')
+                                    ->whereHas('ruang')
+                                    ->with('hari', 'ruang')
                                     ->orderBy('hari_id')
                                     ->orderBy('jam_mulai')
                                     ->get();
 
-        // Determine the current day's ID
-        $currentDayName = Carbon::now()->dayName; // e.g., "Monday"
+        // Determine the current day's ID using Indonesian locale
+        $currentDayName = Carbon::now()->locale('id')->dayName;
         $hari = Hari::where('nama_hari', $currentDayName)->first();
         $currentDayId = $hari ? $hari->id : null;
 
@@ -310,28 +328,31 @@ class DosenController extends Controller
 
         $selectedJadwalKuliah = null;
         if ($currentDayId) {
-            $selectedJadwalKuliah = $jadwalKuliahs->where('hari_id', $currentDayId)
-                                                ->where('jam.jam_mulai', '<=', $currentTime)
-                                                ->where('jam.jam_selesai', '>=', $currentTime)
-                                                ->first();
+            // Filter schedules for the current day
+            $jadwalHariIni = $jadwalKuliahs->where('hari_id', $currentDayId);
+
+            // Find a schedule that is currently active
+            $selectedJadwalKuliah = $jadwalHariIni->first(function ($jadwal) use ($currentTime) {
+                return $currentTime >= $jadwal->jam_mulai && $currentTime <= $jadwal->jam_selesai;
+            });
+
+            // If no schedule is active right now, take the first one for today
+            if (!$selectedJadwalKuliah) {
+                $selectedJadwalKuliah = $jadwalHariIni->first();
+            }
         }
 
-        // If no specific jadwal found for current time, just pick the first one available
+        // If no schedule found for today, just pick the first one available for the course
         if (!$selectedJadwalKuliah && $jadwalKuliahs->isNotEmpty()) {
             $selectedJadwalKuliah = $jadwalKuliahs->first();
         }
-
-        // Add a check to ensure all required relationships are loaded
-        if ($selectedJadwalKuliah && (!$selectedJadwalKuliah->jam || !$selectedJadwalKuliah->hari || !$selectedJadwalKuliah->ruang)) {
-            $selectedJadwalKuliah = null; // Treat as if no suitable jadwal was found
-        }
-
+        
         // Determine the next logical 'pertemuan' number
         $nextPertemuan = Absensi::where('pengampu_id', $pengampu->id)
                                 ->max('pertemuan');
         $nextPertemuan = $nextPertemuan ? $nextPertemuan + 1 : 1; // If no attendance yet, start at 1
 
-        return view('dosen.absensi.take', compact('pengampu', 'mahasiswas', 'selectedJadwalKuliah', 'nextPertemuan'));
+        return view('dosen.absensi.take', compact('pengampu', 'mahasiswas', 'jadwalKuliahs', 'selectedJadwalKuliah', 'nextPertemuan'));
     }
 
     public function storeAbsensi(Request $request, Pengampu $pengampu)

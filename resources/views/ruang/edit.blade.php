@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Edit Data Ruangan</h5>
                     <a href="{{ route('ruang.index') }}" class="btn btn-secondary">
                         Kembali
@@ -51,7 +51,7 @@
                             <label for="kapasitas" class="form-label">Kapasitas Ruangan</label>
                             <input type="number" class="form-control @error('kapasitas') is-invalid @enderror"
                                    id="kapasitas" name="kapasitas" value="{{ old('kapasitas', $ruang->kapasitas) }}"
-                                   placeholder="Masukkan kapasitas ruangan" max="50">
+                                   placeholder="Masukkan kapasitas ruangan" min="0" max="40">
                             @error('kapasitas')
                                 <div class="invalid-feedback">
                                     {{ $message }}

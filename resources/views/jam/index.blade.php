@@ -31,8 +31,8 @@
             @forelse($jamList as $jam)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $jam->jam_mulai }}</td>
-                    <td>{{ $jam->jam_selesai }}</td>
+                    <td>{{ \Carbon\Carbon::parse($jam->jam_mulai)->format('H:i') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($jam->jam_selesai)->format('H:i') }}</td>
                     <td>{{ $jam->durasi }}</td>
                     <td>
                         <a href="{{ route('jam.edit', $jam->id) }}" class="btn btn-warning btn-sm"> <i class="fas fa-edit"></i> Edit</a>

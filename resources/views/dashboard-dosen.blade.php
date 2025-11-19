@@ -18,14 +18,14 @@
     <div class="row">
         <!-- Kolom Kiri -->
         <div class="col-lg-8">
-            <!-- Widget Semua Jadwal Mengajar -->
+            <!-- Widget Jadwal Mengajar Hari Ini -->
             <div class="widget-card primary-border">
                 <div class="widget-header">
-                    <h2 class="widget-title"><i class="fas fa-calendar-alt mr-2"></i>Semua Jadwal Mengajar Anda</h2>
+                    <h2 class="widget-title"><i class="fas fa-calendar-alt mr-2"></i>Jadwal Mengajar Hari Ini</h2>
                 </div>
                 <div class="schedule-timeline">
-                    @if(isset($semuaJadwal) && $semuaJadwal->count() > 0)
-                        @foreach($semuaJadwal as $jadwal)
+                    @if(isset($jadwalHariIni) && $jadwalHariIni->count() > 0)
+                        @foreach($jadwalHariIni as $jadwal)
                             <div class="timeline-item jadwal-item">
                                 <div class="timeline-marker"></div>
                                 <div class="timeline-content">
@@ -52,8 +52,8 @@
                     @else
                         <div class="text-center empty-state">
                             <i class="fas fa-info-circle mr-2 fa-3x mb-3"></i>
-                            <p class="lead">Tidak ada jadwal mengajar yang terdaftar untuk Anda.</p>
-                            <p class="text-muted">Silakan hubungi admin jika ini adalah kesalahan.</p>
+                            <p class="lead">Tidak ada jadwal mengajar untuk hari ini.</p>
+                            <p class="text-muted">Jadwal Anda kosong untuk hari ini. Nikmati waktu luang Anda!</p>
                         </div>
                     @endif
                 </div>

@@ -32,10 +32,16 @@
                         <li class="jadwal-item" data-start="{{ $jadwal->jam_mulai }}" data-end="{{ $jadwal->jam_selesai }}">
                             <div class="jadwal-info">
                                 <div class="jadwal-matkul">{{ $jadwal->pengampu->matakuliah->nama }}</div>
-                                <small class="text-muted">{{ optional($jadwal->pengampu->dosen->first())->nama ?? 'Dosen belum ditentukan' }}</small>
+                                <small class="text-muted">
+                                    @forelse($jadwal->pengampu->dosen as $dosen)
+                                        {!! $dosen->nama !!}{!! !$loop->last ? '<br>' : '' !!}
+                                    @empty
+                                        Dosen belum ditentukan
+                                    @endforelse
+                                </small>
                             </div>
                             <div class="text-right">
-                                <div class="jadwal-time">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</div>
+                                <div class="jadwal-time">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</div>
                                 <div class="jadwal-room"><i class="fas fa-map-marker-alt fa-fw"></i>{{ $jadwal->ruang->nama_ruang }}</div>
                             </div>
                         </li>
@@ -69,10 +75,16 @@
                                     <li class="jadwal-item">
                                         <div class="jadwal-info">
                                             <div class="jadwal-matkul">{{ $jadwal->pengampu->matakuliah->nama }}</div>
-                                            <small class="text-muted">{{ optional($jadwal->pengampu->dosen->first())->nama ?? 'Dosen belum ditentukan' }}</small>
+                                            <small class="text-muted">
+                                    @forelse($jadwal->pengampu->dosen as $dosen)
+                                        {!! $dosen->nama !!}{!! !$loop->last ? '<br>' : '' !!}
+                                    @empty
+                                        Dosen belum ditentukan
+                                    @endforelse
+                                </small>
                                         </div>
                                         <div class="text-right">
-                                            <div class="jadwal-time">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</div>
+                                            <div class="jadwal-time">{{ substr($jadwal->jam_mulai, 0, 5) }} - {{ substr($jadwal->jam_selesai, 0, 5) }}</div>
                                             <div class="jadwal-room"><i class="fas fa-map-marker-alt fa-fw"></i>{{ $jadwal->ruang->nama_ruang }}</div>
                                         </div>
                                     </li>

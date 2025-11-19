@@ -52,13 +52,15 @@
 <body>
     @auth
     <!-- Sidebar -->
-    @if (Auth::user()->role == 'admin')
-        @include('layouts.partials.sidebar-admin')
-    @elseif (Auth::user()->role == 'mahasiswa')
-        @include('layouts.partials.sidebar-mahasiswa')
-    @elseif (Auth::user()->role == 'dosen')
-        @include('layouts.partials.sidebar-dosen')
-    @endif
+    @unless(isset($hide_sidebar) && $hide_sidebar)
+        @if (Auth::user()->role == 'admin')
+            @include('layouts.partials.sidebar-admin')
+        @elseif (Auth::user()->role == 'mahasiswa')
+            @include('layouts.partials.sidebar-mahasiswa')
+        @elseif (Auth::user()->role == 'dosen')
+            @include('layouts.partials.sidebar-dosen')
+        @endif
+    @endunless
     @endauth
 
     <!-- Header -->

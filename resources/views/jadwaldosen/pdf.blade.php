@@ -28,11 +28,7 @@
             <tr>
                 <td>{{ $j->hari->nama_hari ?? '-' }}</td>
                 <td>
-                    @if ($j->jam)
-                        {{ $j->jam->jam_mulai ?? '-' }} - {{ $j->jam->jam_selesai ?? '-' }}
-                    @else
-                        -
-                    @endif
+                    {{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') ?? '-' }} - {{ \Carbon\Carbon::parse($j->jam_selesai)->format('H:i') ?? '-' }}
                 </td>
                 <td>{{ $j->pengampu->matakuliah->nama ?? '-' }}</td>
                 <td>{{ $j->pengampu->matakuliah->sks ?? '-' }}</td>

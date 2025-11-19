@@ -5,9 +5,9 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Data Mahasiswa</h4>
-            <button class="btn btn-light btn-sm" onclick="window.location.href='{{ route('mahasiswa.create') }}'">
+            <!-- <button class="btn btn-light btn-sm" onclick="window.location.href='{{ route('mahasiswa.create') }}'">
                 <i class="fas fa-plus"></i> Tambah Data
-            </button>
+            </button> -->
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -52,9 +52,9 @@
                                 <a href="{{ route('admin.mahasiswa.krs.show', $mahasiswa->id) }}" class="btn btn-sm btn-info text-white">
                                     <i class="fas fa-file-alt"></i> KRS
                                 </a>
-                                <a href="{{ route('mahasiswa.show', $mahasiswa->id) }}" class="btn btn-sm btn-primary">
+                                <!--<a href="{{ route('mahasiswa.show', $mahasiswa->id) }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-eye"></i> Detail
-                                </a>
+                                </a> --> 
                                 <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>

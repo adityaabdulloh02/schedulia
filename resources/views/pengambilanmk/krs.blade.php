@@ -126,6 +126,11 @@
         font-size: 3rem;
         margin-bottom: 1rem;
     }
+
+    .card-header h4,
+    .card-header h3 {
+        color: #fff !important;
+    }
 </style>
 
 <div class="container-fluid py-4">

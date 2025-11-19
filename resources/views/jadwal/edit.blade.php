@@ -61,7 +61,7 @@
             <select name="jam_mulai" id="jam_mulai" class="form-control" required>
                 @foreach($jam as $item)
                     <option value="{{ $item->jam_mulai }}" {{ $item->jam_mulai == $jadwal->jam_mulai ? 'selected' : '' }}>
-                        {{ $item->jam_mulai }}
+                        {{ \Carbon\Carbon::parse($item->jam_mulai)->format('H:i') }}
                     </option>
                 @endforeach
             </select>
