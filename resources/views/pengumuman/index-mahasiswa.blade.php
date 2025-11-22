@@ -5,15 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center bg-primary">
-                    <div class="d-flex align-items-center">
-                        <h3 class="me-3 text-white">Pengumuman</h3>
-                        <a href="{{ route('jadwaldosen.index') }}" class="btn btn-success btn-sm">Buat Pengumuman</a>
-                    </div>
-                    <form action="{{ route('pengumuman.index') }}" method="GET" class="d-flex">
-                        <input type="text" name="search" class="form-control" placeholder="Pencarian..." value="{{ request('search') }}">
-                        <button type="submit" class="btn btn-primary ms-2">Search</button>
-                    </form>
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Pengumuman</h3>
                 </div>
 
                 <div class="card-body">

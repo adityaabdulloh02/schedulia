@@ -8,6 +8,7 @@ use App\Models\Hari;
 use App\Models\JadwalKuliah;
 use App\Models\Mahasiswa;
 use App\Models\Pengampu;
+use App\Models\Pengumuman;
 use App\Models\Prodi;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -42,6 +43,12 @@ class DosenController extends Controller
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
+        // Ambil pengumuman terkait untuk dosen
+        $pengumuman = Pengumuman::whereIn('jadwal_kuliah_id', function ($query) use ($pengampuIds) {
+            $query->select('id')->from('jadwal_kuliah')->whereIn('pengampu_id', $pengampuIds);
+        })->latest()->take(5)->get();
+
+
         // Hitung total mata kuliah yang diampu dosen
         $totalCourses = Pengampu::whereHas('dosen', function ($query) use ($dosen) {
             $query->where('dosen.id', $dosen->id);
@@ -63,7 +70,7 @@ class DosenController extends Controller
                 return $students->count();
             });
 
-        return view('dashboard-dosen', compact('dosen', 'jadwalHariIni', 'totalCourses', 'mahasiswaPerKelas'));
+        return view('dashboard-dosen', compact('dosen', 'jadwalHariIni', 'totalCourses', 'mahasiswaPerKelas', 'pengumuman'));
     }
 
     // Tampilkan data dosen

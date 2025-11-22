@@ -27,6 +27,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('mahasiswa/profil', [MahasiswaController::class, 'profil'])->name('mahasiswa.profil');
     Route::get('mahasiswa/profil/edit', [MahasiswaController::class, 'editProfil'])->name('mahasiswa.profil.edit');
     Route::put('mahasiswa/profil', [MahasiswaController::class, 'updateProfil'])->name('mahasiswa.profil.update');
+    Route::get('mahasiswa/pengumuman', [PengumumanController::class, 'indexForMahasiswa'])->name('mahasiswa.pengumuman.index');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -138,3 +139,6 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::view('/unauthorized', 'unauthorized')->name('unauthorized');
+
+
+

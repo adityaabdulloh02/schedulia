@@ -24,7 +24,7 @@
                         <p class="card-text">{{ $pengumuman->pesan }}</p>
                     </div>
                     <div class="mb-3">
-                        <strong>Waktu:</strong> {{ $pengumuman->created_at->format('d M Y, H:i') }}
+                        <strong>Waktu:</strong> {{ $pengumuman->created_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }}
                     </div>
 
                     <hr>

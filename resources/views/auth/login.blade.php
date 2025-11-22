@@ -21,7 +21,7 @@
             @csrf
 
             <div class="form-group">
-                <input type="email" name="email" placeholder="Email Akademik" class="form-control @error('email') is-invalid @enderror" required autofocus>
+                <input type="email" name="email" placeholder="Email Akademik" class="form-control @error('email') is-invalid @enderror" required autofocus oninvalid="if(this.validity.valueMissing){this.setCustomValidity('Harap isi bidang ini')}else if(this.validity.typeMismatch){this.setCustomValidity('Masukkan alamat email yang valid, harus mengandung karakter \'@\'')}" oninput="this.setCustomValidity('')">
                 <span class="icon">
                     <i class="fas fa-envelope"></i>
                 </span>
@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group position-relative">
-                <input type="password" name="password" id="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" required>
+                <input type="password" name="password" id="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" required oninvalid="this.setCustomValidity('Harap isi bidang ini')" oninput="this.setCustomValidity('')">
                 <span class="icon toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>

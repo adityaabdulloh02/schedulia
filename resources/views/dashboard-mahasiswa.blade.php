@@ -151,7 +151,7 @@
                             </div>
                             <div class="announcement-footer">
                                 <span>Oleh: {{ $item->dosen->nama }}</span>
-                                <span>{{ $item->created_at->translatedFormat('d M Y, H:i') }}</span>
+                                <span>{{ $item->created_at->timezone('Asia/Jakarta')->translatedFormat('d M Y, H:i') }}</span>
                             </div>
                         </div>
                     @empty
@@ -164,9 +164,8 @@
 </div>
 @endsection
 
-@push('styles')
-@vite(['resources/css/mahasiswa-dashboard.scss'])
-@endpush
+
+
 
 @push('scripts')
 <script>
@@ -227,7 +226,57 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault()
             tabTrigger.show()
         })
-    })
+    });
+
+    // Listen for new announcements
+    if (window.Echo) {
+        const kelasId = {{ $mahasiswa->kelas_id ?? 'null' }};
+        if (kelasId) {
+            window.Echo.private(`kelas.${kelasId}`)
+                .listen('.pengumuman-baru', (e) => {
+                    console.log('Pengumuman baru diterima:', e);
+                    
+                    // Determine icon and color based on tipe
+                    let icon = 'info';
+                    let title = 'Informasi Baru';
+                    if (e.pengumuman.tipe === 'perubahan') {
+                        icon = 'warning';
+                        title = 'Perubahan Jadwal';
+                    } else if (e.pengumuman.tipe === 'pembatalan') {
+                        icon = 'error';
+                        title = 'Pembatalan Kelas';
+                    }
+
+                    Swal.fire({
+                        icon: icon,
+                        title: title,
+                        html: `
+                            <p class="mb-1">${e.pengumuman.pesan}</p>
+                            <small class="text-muted">Silakan cek halaman pengumuman untuk detail.</small>
+                        `,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 10000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    });
+
+                    // Optional: refresh the page to show the new announcement in the list
+                    // setTimeout(() => {
+                    //     window.location.reload();
+                    // }, 5000); 
+                });
+        } else {
+            console.log('Echo listener: Mahasiswa kelas ID not found.');
+        }
+    } else {
+        console.log('Laravel Echo not found. Real-time updates disabled.');
+    }
 });
 </script>
 @endpush
+

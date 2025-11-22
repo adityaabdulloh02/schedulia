@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PengumumanBaru;
 use App\Models\JadwalKuliah;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
@@ -54,13 +55,33 @@ class PengumumanController extends Controller
             return redirect()->back()->with('error', 'Hanya dosen yang bisa membuat pengumuman.');
         }
 
-        Pengumuman::create([
+        $pengumuman = Pengumuman::create([
             'jadwal_kuliah_id' => $request->jadwal_kuliah_id,
             'dosen_id' => $dosen->id,
             'tipe' => $request->tipe,
             'pesan' => $request->pesan,
         ]);
 
+        // Broadcast the new announcement event
+        event(new PengumumanBaru($pengumuman));
+
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dikirim!');
+    }
+
+    public function indexForMahasiswa()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $kelasId = $mahasiswa->kelas_id;
+
+        // Ambil semua jadwal kuliah untuk kelas mahasiswa
+        $jadwalKuliahIds = JadwalKuliah::where('kelas_id', $kelasId)->pluck('id');
+
+        // Ambil pengumuman yang terkait dengan jadwal kuliah tersebut
+        $pengumumans = Pengumuman::with('jadwalKuliah.pengampu.matakuliah', 'dosen')
+            ->whereIn('jadwal_kuliah_id', $jadwalKuliahIds)
+            ->latest()
+            ->paginate(10);
+
+        return view('pengumuman.index-mahasiswa', compact('pengumumans'));
     }
 }

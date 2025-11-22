@@ -19,7 +19,7 @@
         <!-- Kolom Kiri -->
         <div class="col-lg-8">
             <!-- Widget Jadwal Mengajar Hari Ini -->
-            <div class="widget-card primary-border">
+            <div class="widget-card primary-border mb-4">
                 <div class="widget-header">
                     <h2 class="widget-title"><i class="fas fa-calendar-alt mr-2"></i>Jadwal Mengajar Hari Ini</h2>
                 </div>
@@ -59,7 +59,41 @@
                 </div>
             </div>
 
-            
+             <!-- Widget Pengumuman -->
+            <div class="widget-card warning-border">
+                <div class="widget-header">
+                    <h2 class="widget-title"><i class="fas fa-bullhorn"></i>Pengumuman Terkirim</h2>
+                </div>
+                <div class="pengumuman-list">
+                    @forelse($pengumuman as $item)
+                        @php
+                            $cardClass = 'info-type'; $iconClass = 'fas fa-info-circle'; $badgeClass = 'info';
+                            if ($item->tipe == 'perubahan') { $cardClass = 'warning-type'; $iconClass = 'fas fa-exclamation-triangle'; $badgeClass = 'warning'; }
+                            elseif ($item->tipe == 'pembatalan') { $cardClass = 'danger-type'; $iconClass = 'fas fa-times-circle'; $badgeClass = 'danger'; }
+                        @endphp
+                        <div class="announcement-card {{ $cardClass }}">
+                            <div class="announcement-header">
+                                <i class="announcement-icon {{ $iconClass }}"></i>
+                                <div>
+                                    <h5 class="announcement-title">{{ $item->jadwalKuliah->pengampu->matakuliah->nama }}</h5>
+                                    <div class="announcement-meta">
+                                        <span class="announcement-type-badge {{ $badgeClass }}">{{ ucfirst($item->tipe) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="announcement-content">
+                                <p>{{ $item->pesan }}</p>
+                            </div>
+                            <div class="announcement-footer">
+                                <span>Oleh: {{ $item->dosen->nama }}</span>
+                                <span>{{ $item->created_at->timezone('Asia/Jakarta')->translatedFormat('d M Y, H:i') }}</span>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-muted text-center">Belum ada pengumuman yang Anda kirim.</p>
+                    @endforelse
+                </div>
+            </div>
         </div>
 
         <!-- Kolom Kanan -->
@@ -83,22 +117,7 @@
                     <a href="{{ route('dosen.edit-profile') }}" class="btn btn-primary mt-3">Edit Profile</a>
                 </div>
             </div>
-
-            
         </div>
-    </div>
-
-    <!-- Info Cards Row -->
-    <div class="row">
-        
-
-        
-
-        
-    </div>
-    <div class="row">
-        
-        
     </div>
 </div>
 
