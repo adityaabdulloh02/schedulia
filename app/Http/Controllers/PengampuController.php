@@ -85,7 +85,20 @@ class PengampuController extends Controller
         $request->validate([
             'dosen1' => 'required|exists:dosen,id',
             'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
-            'matakuliah_id' => 'required|exists:matakuliah,id',
+            'matakuliah_id' => [
+                'required',
+                'exists:matakuliah,id',
+                function ($attribute, $value, $fail) use ($request) {
+                    $exists = Pengampu::where('matakuliah_id', $value)
+                        ->where('kelas_id', $request->kelas_id)
+                        ->where('tahun_akademik', $request->tahun_akademik)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Kombinasi Mata Kuliah, Kelas, dan Tahun Akademik sudah ada.');
+                    }
+                },
+            ],
             'kelas_id' => 'required|exists:kelas,id',
             'tahun_akademik' => 'required',
             'prodi_id' => 'required|exists:prodi,id',
@@ -137,7 +150,21 @@ class PengampuController extends Controller
         $request->validate([
             'dosen1' => 'required|exists:dosen,id',
             'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
-            'matakuliah_id' => 'required|exists:matakuliah,id',
+            'matakuliah_id' => [
+                'required',
+                'exists:matakuliah,id',
+                function ($attribute, $value, $fail) use ($request, $pengampu) {
+                    $exists = Pengampu::where('matakuliah_id', $value)
+                        ->where('kelas_id', $request->kelas_id)
+                        ->where('tahun_akademik', $request->tahun_akademik)
+                        ->where('id', '!=', $pengampu->id) // Exclude current record
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Kombinasi Mata Kuliah, Kelas, dan Tahun Akademik sudah ada.');
+                    }
+                },
+            ],
             'kelas_id' => 'required|exists:kelas,id',
             'tahun_akademik' => 'required',
             'prodi_id' => 'required|exists:prodi,id',
