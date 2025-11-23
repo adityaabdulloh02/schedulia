@@ -13,21 +13,20 @@
                 </div>
 
                 <div class="card-body">
-                    {{-- SweetAlert for validation errors --}}
                     @if ($errors->any())
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                let errorMessages = '';
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
                                 @foreach ($errors->all() as $error)
-                                    errorMessages += '{{ $error }}<br>';
+                                    <li>{{ $error }}</li>
                                 @endforeach
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Validasi Gagal!',
-                                    html: errorMessages,
-                                });
-                            });
-                        </script>
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
                     @endif
 
                     <form action="{{ route('pengampu.store') }}" method="POST">

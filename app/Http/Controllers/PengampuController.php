@@ -80,38 +80,17 @@ class PengampuController extends Controller
         ]);
     }
 
-                public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'dosen1' => 'required|exists:dosen,id',
             'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
-            'matakuliah_id' => [
-                'required',
-                'exists:matakuliah,id',
-                // Add a custom rule to check for uniqueness of the combination, excluding the current record
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = Pengampu::where('matakuliah_id', $value)
-                                      ->where('kelas_id', $request->kelas_id)
-                                      ->where('tahun_akademik', $request->tahun_akademik)
-                                      ->where('prodi_id', $request->prodi_id)
-                                      ->exists();
-                    if ($exists) {
-                        $fail('Mata kuliah ini sudah diampu di kelas dan tahun akademik yang sama untuk program studi ini.');
-                    }
-                },
-            ],
+            'matakuliah_id' => 'required|exists:matakuliah,id',
             'kelas_id' => 'required|exists:kelas,id',
             'tahun_akademik' => 'required',
             'prodi_id' => 'required|exists:prodi,id',
         ], [
             'dosen2.different' => 'Dosen tidak boleh sama.',
-            'matakuliah_id.required' => 'Mata kuliah wajib diisi.',
-            'matakuliah_id.exists' => 'Mata kuliah tidak valid.',
-            'kelas_id.required' => 'Kelas wajib diisi.',
-            'kelas_id.exists' => 'Kelas tidak valid.',
-            'tahun_akademik.required' => 'Tahun akademik wajib diisi.',
-            'prodi_id.required' => 'Program studi wajib diisi.',
-            'prodi_id.exists' => 'Program studi tidak valid.',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -158,33 +137,12 @@ class PengampuController extends Controller
         $request->validate([
             'dosen1' => 'required|exists:dosen,id',
             'dosen2' => 'nullable|exists:dosen,id|different:dosen1',
-            'matakuliah_id' => [
-                'required',
-                'exists:matakuliah,id',
-                // Add a custom rule to check for uniqueness of the combination, excluding the current record
-                function ($attribute, $value, $fail) use ($request) {
-                    $exists = Pengampu::where('matakuliah_id', $value)
-                                      ->where('kelas_id', $request->kelas_id)
-                                      ->where('tahun_akademik', $request->tahun_akademik)
-                                      ->where('prodi_id', $request->prodi_id)
-                                      ->exists();
-                    if ($exists) {
-                        $fail('Mata kuliah ini sudah diampu di kelas dan tahun akademik yang sama untuk program studi ini.');
-                    }
-                },
-            ],
+            'matakuliah_id' => 'required|exists:matakuliah,id',
             'kelas_id' => 'required|exists:kelas,id',
             'tahun_akademik' => 'required',
             'prodi_id' => 'required|exists:prodi,id',
         ], [
             'dosen2.different' => 'Dosen tidak boleh sama.',
-            'matakuliah_id.required' => 'Mata kuliah wajib diisi.',
-            'matakuliah_id.exists' => 'Mata kuliah tidak valid.',
-            'kelas_id.required' => 'Kelas wajib diisi.',
-            'kelas_id.exists' => 'Kelas tidak valid.',
-            'tahun_akademik.required' => 'Tahun akademik wajib diisi.',
-            'prodi_id.required' => 'Program studi wajib diisi.',
-            'prodi_id.exists' => 'Program studi tidak valid.',
         ]);
 
         DB::transaction(function () use ($request, $pengampu) {
