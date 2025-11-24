@@ -53,6 +53,7 @@ class PengambilanMKController extends Controller
         // Ambil semua matakuliah yang sesuai dengan prodi mahasiswa dan semester mahasiswa saat ini,
         // dan yang belum diambil serta divalidasi
         $pengampuTersedia = Pengampu::where('prodi_id', $mahasiswa->prodi_id)
+            ->where('kelas_id', $mahasiswa->kelas_id)
             ->whereHas('matakuliah', function ($query) use ($mahasiswa) {
                 $query->where('semester', $mahasiswa->semester);
             })
