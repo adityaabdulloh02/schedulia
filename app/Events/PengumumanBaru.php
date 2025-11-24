@@ -66,7 +66,7 @@ class PengumumanBaru implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        $this->pengumuman->load(['jadwalKuliah.pengampu.matakuliah', 'jadwalKuliah.kelas', 'dosen', 'jadwalKuliah.hari', 'jadwalKuliah.jam', 'jadwalKuliah.ruang']);
+        $this->pengumuman->load(['jadwalKuliah.pengampu.matakuliah', 'jadwalKuliah.kelas', 'dosen', 'jadwalKuliah.hari', 'jadwalKuliah.ruang']);
 
         return [
             'id' => $this->pengumuman->id,
@@ -79,8 +79,8 @@ class PengumumanBaru implements ShouldBroadcast
             'jadwal_kuliah' => [
                 'id' => $this->pengumuman->jadwalKuliah->id,
                 'hari' => $this->pengumuman->jadwalKuliah->hari->nama_hari,
-                'jam_mulai' => $this->pengumuman->jadwalKuliah->jam->jam_mulai,
-                'jam_selesai' => $this->pengumuman->jadwalKuliah->jam->jam_selesai,
+                'jam_mulai' => $this->pengumuman->jadwalKuliah->jam_mulai,
+                'jam_selesai' => $this->pengumuman->jadwalKuliah->jam_selesai,
                 'ruang' => $this->pengumuman->jadwalKuliah->ruang->nama_ruang,
                 'matakuliah' => [
                     'nama' => $this->pengumuman->jadwalKuliah->pengampu->matakuliah->nama_matakuliah,

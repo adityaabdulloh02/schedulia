@@ -236,13 +236,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 .listen('.pengumuman-baru', (e) => {
                     console.log('Pengumuman baru diterima:', e);
                     
+                    // Add a check for 'e' being defined
+                    if (!e) {
+                        console.error('Received undefined event data for pengumuman-baru.');
+                        return; // Exit if e is undefined
+                    }
+
                     // Determine icon and color based on tipe
                     let icon = 'info';
                     let title = 'Informasi Baru';
-                    if (e.pengumuman.tipe === 'perubahan') {
+                    if (e.tipe === 'perubahan') {
                         icon = 'warning';
                         title = 'Perubahan Jadwal';
-                    } else if (e.pengumuman.tipe === 'pembatalan') {
+                    } else if (e.tipe === 'pembatalan') {
                         icon = 'error';
                         title = 'Pembatalan Kelas';
                     }
@@ -251,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         icon: icon,
                         title: title,
                         html: `
-                            <p class="mb-1">${e.pengumuman.pesan}</p>
+                            <p class="mb-1">${e.pesan}</p>
                             <small class="text-muted">Silakan cek halaman pengumuman untuk detail.</small>
                         `,
                         toast: true,
