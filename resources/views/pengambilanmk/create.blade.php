@@ -133,6 +133,7 @@
                                     <th><i class="fas fa-university me-2"></i>Kelas</th>
                                     <th><i class="fas fa-credit-card me-2"></i>SKS</th>
                                     <th><i class="fas fa-calendar-alt me-2"></i>Semester</th>
+                                    <th><i class="fas fa-calendar-check me-2"></i>Tahun Akademik</th>
                                     <th class="text-center"><i class="fas fa-cogs me-2"></i>Aksi</th>
                                 </tr>
                             </thead>
@@ -147,19 +148,21 @@
                                     <td>{{ $pengampu->kelas->nama_kelas }}</td>
                                     <td>{{ $pengampu->matakuliah->sks }}</td>
                                     <td>{{ $pengampu->matakuliah->semester }}</td>
+                                    <td>{{ $pengampu->tahun_akademik }}</td>
                                     <td class="text-center">
                                         @if(in_array($pengampu->id, $diambilPengampuIds))
                                             {{-- Form untuk Lepas Mata Kuliah --}}
-                                            <form action="{{ route('pengambilan-mk.destroy', $pengampu->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin melepas mata kuliah ini?');">
+                                            <form action="{{ route('pengambilan-mk.destroy', $pengampu->id) }}" method="POST" class="lepas-mk-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Lepas</button>
                                             </form>
                                         @else
                                             {{-- Form untuk Ambil Mata Kuliah --}}
-                                            <form action="{{ route('pengambilan-mk.store') }}" method="POST">
+                                            <form action="{{ route('pengambilan-mk.store') }}" method="POST" class="ambil-mk-form">
                                                 @csrf
                                                 <input type="hidden" name="pengampu_id" value="{{ $pengampu->id }}">
+                                                <input type="hidden" name="tahun_akademik" value="{{ $pengampu->tahun_akademik }}">
                                                 <button type="submit" class="btn btn-primary btn-sm">Ambil</button>
                                             </form>
                                         @endif
@@ -167,7 +170,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="empty-state">
+                                    <td colspan="7" class="empty-state">
                                         <i class="fas fa-box-open"></i>
                                         <p class="mt-3">Tidak ada kelas yang tersedia untuk program studi dan semester Anda saat ini.</p>
                                         <p>Silakan hubungi bagian akademik untuk informasi lebih lanjut.</p>
@@ -186,6 +189,54 @@
 
 @push('scripts')
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // SweetAlert for Ambil MK
+        document.querySelectorAll('.ambil-mk-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const courseName = this.closest('tr').querySelector('td:first-child strong').textContent.trim();
+                
+                Swal.fire({
+                    title: 'Konfirmasi Pengambilan',
+                    html: `Anda yakin ingin mengambil mata kuliah <strong>${courseName}</strong>?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#4e73df',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Ya, Ambil!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+
+        // SweetAlert for Lepas MK
+        document.querySelectorAll('.lepas-mk-form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const courseName = this.closest('tr').querySelector('td:first-child strong').textContent.trim();
+
+                Swal.fire({
+                    title: 'Konfirmasi Pelepasan',
+                    html: `Anda yakin ingin melepas mata kuliah <strong>${courseName}</strong>?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e74a3b',
+                    cancelButtonColor: '#858796',
+                    confirmButtonText: 'Ya, Lepas!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+    });
+
     @if(session('error') == 'SKS melebihi batas maksimum (24 SKS).')
         Swal.fire({
             icon: 'error',

@@ -75,6 +75,7 @@ class PengambilanMKController extends Controller
     {
         $request->validate([
             'pengampu_id' => 'required|exists:pengampu,id',
+            'tahun_akademik' => 'required|string|max:9',
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
@@ -106,6 +107,7 @@ class PengambilanMKController extends Controller
                 'matakuliah_id' => $pengampu->matakuliah_id,
                 'semester' => $mahasiswa->semester, // Asumsi semester diambil dari data mahasiswa
                 'status' => 'pending',
+                'tahun_akademik' => $request->tahun_akademik,
             ]);
 
             return redirect()->route('pengambilan-mk.create')->with('success', 'Mata kuliah berhasil diambil.');
@@ -260,7 +262,7 @@ class PengambilanMKController extends Controller
         $pengambilanMK->status = $request->status;
         $pengambilanMK->save();
 
-        return redirect()->route('admin.pengambilanmk.validation.index')->with('success', 'Status pengambilan mata kuliah berhasil diperbarui.');
+        return back()->with('success', 'Status pengambilan mata kuliah berhasil diperbarui.');
     }
 
     public function showStudentKRS(Mahasiswa $mahasiswa)
@@ -269,7 +271,16 @@ class PengambilanMKController extends Controller
             ->with(['matakuliah', 'pengampu.dosen']) // Added 'pengampu.dosen'
             ->get();
 
-        return view('pengambilanmk.student_krs_detail', compact('pengambilanMKs', 'mahasiswa'));
+        $tahun_akademik = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+            ->whereNotNull('tahun_akademik')
+            ->orderBy('tahun_akademik', 'desc')
+            ->value('tahun_akademik');
+
+        if (is_null($tahun_akademik)) {
+            $tahun_akademik = 'N/A';
+        }
+
+        return view('pengambilanmk.student_krs_detail', compact('pengambilanMKs', 'mahasiswa', 'tahun_akademik'));
     }
 
     public function approveAllPending(Mahasiswa $mahasiswa)

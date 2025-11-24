@@ -1,19 +1,3 @@
-import './bootstrap';
-import 'bootstrap/scss/bootstrap.scss';
-import 'sweetalert2/dist/sweetalert2.min.css';
-import * as bootstrap from 'bootstrap';
-import Swal from 'sweetalert2';
-import Chart from 'chart.js/auto';
-import jQuery from 'jquery';
-window.$ = jQuery;
-
-import DataTable from 'datatables.net-bs5';
-window.DataTable = DataTable;
-
-window.Swal = Swal;
-window.Chart = Chart;
-window.bootstrap = bootstrap;
-
 document.addEventListener('DOMContentLoaded', function () {
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const body = document.body;
@@ -71,6 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         // Re-apply desktop state on resize
         applyDesktopSidebarState();
+
+        // Force reflow of sidebar content after resize to fix scrolling issue
+        setTimeout(() => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                // Trigger reflow
+                sidebar.offsetHeight; 
+            }
+        }, 50); // Small delay to allow DOM to update
     });
 
 
