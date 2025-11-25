@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Optional: refresh the page to show the new announcement in the list
                     // setTimeout(() => {
                     //     window.location.reload();
-                    // }, 5000); 
+                    // }, 5000); tes
                 });
         } else {
             console.log('Echo listener: Mahasiswa ID not found.');
