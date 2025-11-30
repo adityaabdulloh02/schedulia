@@ -235,15 +235,6 @@ class MahasiswaController extends Controller
         $user = Auth::user();
         $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
-        // Merge existing data for disabled fields into the request for validation
-        $request->merge([
-            'nim' => $mahasiswa->nim,
-            'nama' => $mahasiswa->nama,
-            'kelas_id' => $mahasiswa->kelas_id,
-            'prodi_id' => $mahasiswa->prodi_id,
-            'semester' => $mahasiswa->semester,
-        ]);
-
         $request->validate([
             'nim' => 'required|unique:mahasiswa,nim,'.$mahasiswa->id,
             'nama' => 'required',
@@ -251,27 +242,41 @@ class MahasiswaController extends Controller
             'prodi_id' => 'required',
             'semester' => 'required|integer',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'nullable|string|min:8|confirmed', // Added password validation
         ]);
 
-        $data = $request->except('foto_profil');
+        DB::transaction(function () use ($request, $mahasiswa, $user) {
+            $data = $request->only(['nama', 'nim', 'kelas_id', 'prodi_id', 'semester']); // Only take editable fields
 
-        if ($request->hasFile('foto_profil')) {
-            // Hapus foto lama jika ada
-            if ($mahasiswa->foto_profil) {
-                Storage::delete('public/foto_profil/'.$mahasiswa->foto_profil);
+            if ($request->hasFile('foto_profil')) {
+                // Delete old profile photo if exists
+                if ($mahasiswa->foto_profil) {
+                    Storage::delete('public/foto_profil/'.$mahasiswa->foto_profil);
+                }
+                $path = $request->file('foto_profil')->store('public/foto_profil');
+                $data['foto_profil'] = basename($path);
+            } elseif ($request->has('remove_foto_profil') && $request->input('remove_foto_profil') == 1) {
+                // Remove existing profile photo
+                if ($mahasiswa->foto_profil) {
+                    Storage::delete('public/foto_profil/'.$mahasiswa->foto_profil);
+                }
+                $data['foto_profil'] = null;
             }
 
-            // Simpan foto baru
-            $path = $request->file('foto_profil')->store('public/foto_profil');
-            $data['foto_profil'] = basename($path);
-        }
+            $mahasiswa->update($data);
 
-        $mahasiswa->update($data);
+            // Update associated User model
+            if ($user->name !== $request->nama) {
+                $user->update(['name' => $request->nama]);
+            }
 
-        // Update nama di tabel users jika berubah
-        if ($mahasiswa->user && $mahasiswa->user->name !== $request->nama) {
-            $mahasiswa->user->update(['name' => $request->nama]);
-        }
+            // Update password if provided
+            if ($request->filled('password')) {
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+            }
+        });
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Profil berhasil diperbarui.');
     }
