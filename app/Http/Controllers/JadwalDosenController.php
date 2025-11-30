@@ -69,7 +69,7 @@ class JadwalDosenController extends Controller
             })
             ->get();
 
-        $pdf = Pdf::loadView('jadwaldosen.pdf', compact('jadwalKuliah'));
+        $pdf = Pdf::loadView('admin.jadwal.pdf', compact('jadwalKuliah'));
 
         return $pdf->stream('jadwal-mengajar-'.$dosen->nip.'.pdf');
     }

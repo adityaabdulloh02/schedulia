@@ -45,6 +45,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('admin/password/update', [AdminController::class, 'updatePassword'])->name('admin.update-password');
     Route::get('admin/krs-mahasiswa', [AdminController::class, 'krsMahasiswa'])->name('admin.krs.mahasiswa');
 
+    Route::get('admin/jadwal', [AdminController::class, 'jadwalIndex'])->name('admin.jadwal.index');
+
     // Routes for PengambilanMK validation
     Route::get('/admin/pengambilanmk/validation', [PengambilanMKController::class, 'adminValidationIndex'])->name('admin.pengambilanmk.validation.index');
     Route::post('/admin/pengambilanmk/validation/{id}/update-status', [PengambilanMKController::class, 'updateStatus'])->name('admin.pengambilanmk.validation.updateStatus');
@@ -119,8 +121,10 @@ Route::get('/jadwaldosen/export-pdf', [JadwalDosenController::class, 'exportPDF'
 Route::get('/jadwalmahasiswa', [JadwalMahasiswaController::class, 'index'])->name('jadwalmahasiswa.index');
 Route::get('/jadwalmahasiswa/export-pdf', [JadwalMahasiswaController::class, 'exportPDF'])->name('jadwalmahasiswa.exportPDF');
 
-Route::resource('jadwal', JadwalKuliahController::class);
+Route::get('jadwal/export-pdf', [AdminController::class, 'exportJadwalPDF'])->name('jadwal.exportPDF');
+Route::get('/jadwal/empty-slots', [JadwalKuliahController::class, 'getEmptyScheduleSlots'])->name('jadwal.empty-slots');
 Route::post('jadwal/generate', [JadwalKuliahController::class, 'generateJadwal'])->name('jadwal.generate');
+Route::resource('jadwal', JadwalKuliahController::class);
 
 // Tambahan untuk navigasi
 Route::get('/kelas/navigation', [KelasController::class, 'navigation'])->name('kelas.navigation');

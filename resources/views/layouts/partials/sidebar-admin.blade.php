@@ -29,10 +29,10 @@
         <i class="bi bi-person-check"></i> <span class="sidebar-link-text">Pengampu</span>
     </a>
     <a href="{{ url('/users') }}" class="sidebar-link {{ request()->is('users*') ? 'active' : '' }}">
-        <i class="bi bi-people"></i> <span class="sidebar-link-text">Users</span>
+        <i class="bi bi-people"></i> <span class="sidebar-link-text">Pengguna</span>
     </a>
 
-    <a href="{{ route('jadwal.index') }}" class="buat-jadwal mt-4" data-bs-toggle="tooltip" title="Buat Jadwal">
-        <i class="bi bi-calendar-event"></i> <span class="sidebar-link-text">Buat Jadwal</span>
+    <a href="{{ url('/jadwal') }}" class="sidebar-link buat-jadwal mt-4 {{ request()->is('jadwal*') ? 'active' : '' }}" data-bs-toggle="tooltip" title="Jadwal Kuliah">
+        <i class="bi bi-calendar-event"></i> <span class="sidebar-link-text">Jadwal Kuliah</span>
     </a>
 </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2025 at 02:02 PM
+-- Generation Time: Nov 28, 2025 at 03:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,11 @@ CREATE TABLE `absensi` (
 
 INSERT INTO `absensi` (`id`, `pengampu_id`, `mahasiswa_id`, `tanggal`, `pertemuan`, `status`, `waktu_absen`, `created_at`, `updated_at`, `jadwal_kuliah_id`) VALUES
 (1, 1, 3, '2025-11-17', 1, 'hadir', '2025-11-17 05:20:03', '2025-11-17 05:20:03', '2025-11-17 05:20:03', 8),
-(2, 1, 3, '2025-11-17', 2, 'izin', '2025-11-17 05:30:15', '2025-11-17 05:28:53', '2025-11-17 05:30:15', 8);
+(2, 1, 3, '2025-11-17', 2, 'izin', '2025-11-17 05:30:15', '2025-11-17 05:28:53', '2025-11-17 05:30:15', 8),
+(3, 1, 3, '2025-11-19', 3, 'hadir', '2025-11-19 06:53:47', '2025-11-18 20:09:17', '2025-11-19 06:53:47', 8),
+(4, 1, 3, '2025-11-19', 4, 'hadir', '2025-11-19 07:00:27', '2025-11-19 07:00:27', '2025-11-19 07:00:27', 8),
+(5, 1, 3, '2025-11-22', 5, 'hadir', '2025-11-22 08:37:47', '2025-11-22 08:37:47', '2025-11-22 08:37:47', 8),
+(6, 1, 3, '2025-11-22', 6, 'izin', '2025-11-22 08:38:34', '2025-11-22 08:38:34', '2025-11-22 08:38:34', 8);
 
 -- --------------------------------------------------------
 
@@ -88,23 +92,8 @@ CREATE TABLE `dosen` (
 INSERT INTO `dosen` (`id`, `nip`, `nama`, `foto_profil`, `email`, `prodi_id`, `created_at`, `updated_at`, `user_id`) VALUES
 (1, '198501012010121001', 'Dr. Budi Santoso, M.Kom.', NULL, 'budi.santoso@example.com', 1, '2025-11-14 08:25:33', '2025-11-14 08:25:33', 2),
 (2, '199002022015032002', 'Siti Aminah, S.Kom., M.T.', 'foto_profil/Ao9lZhQvZKCPCH7J8xgKLU8xKSitLsOJOFBhn1y2.jpg', 'siti.aminah@example.com', 3, '2025-11-14 08:25:34', '2025-11-14 20:51:29', 3),
-(3, '1990019200192015', 'Pak Harun', 'foto_profil/GvOeWmyJyKrVGdFT8e8IMmYplhWwctkZKWk76yLS.jpg', 'harun@gmail.com', 3, '2025-11-14 09:01:33', '2025-11-16 07:38:20', 7);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(3, '1990019200192015', 'Pak Harun', 'foto_profil/GvOeWmyJyKrVGdFT8e8IMmYplhWwctkZKWk76yLS.jpg', 'harun@gmail.com', 3, '2025-11-14 09:01:33', '2025-11-16 07:38:20', 7),
+(5, '1977019122191021', 'Dr. Budi Santoso, M.Kom.', NULL, 'budisantoso@gmail.com', 3, '2025-11-22 04:48:27', '2025-11-22 04:48:27', 10);
 
 -- --------------------------------------------------------
 
@@ -155,8 +144,15 @@ CREATE TABLE `jadwal_kuliah` (
 --
 
 INSERT INTO `jadwal_kuliah` (`id`, `pengampu_id`, `ruang_id`, `hari_id`, `jam_mulai`, `jam_selesai`, `semester`, `tahun_akademik`, `created_at`, `updated_at`, `kelas_id`) VALUES
-(8, 1, 1, 1, '07:00:00', '09:30:00', 7, '2025', '2025-11-16 00:01:04', '2025-11-16 00:01:04', 4),
-(10, 2, 1, 4, '07:00:00', '09:30:00', 7, '2025/2026', '2025-11-16 00:17:04', '2025-11-16 00:17:04', 4);
+(8, 1, 5, 1, '10:00:00', '12:30:00', 7, '2025', '2025-11-16 00:01:04', '2025-11-22 06:59:32', 4),
+(20, 2, 1, 5, '07:00:00', '10:20:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(21, 3, 2, 5, '07:00:00', '09:30:00', 1, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 1),
+(22, 4, 1, 3, '07:00:00', '09:30:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(23, 5, 1, 2, '07:00:00', '10:20:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(24, 7, 1, 4, '07:00:00', '10:20:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(25, 8, 1, 4, '11:00:00', '14:20:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(26, 9, 1, 1, '13:00:00', '16:20:00', 7, '2025/2026', '2025-11-22 08:05:57', '2025-11-22 08:05:57', 4),
+(27, 12, 2, 2, '11:00:00', '13:30:00', 7, '2025/2026', '2025-11-24 06:26:59', '2025-11-24 06:26:59', 5);
 
 -- --------------------------------------------------------
 
@@ -205,7 +201,8 @@ INSERT INTO `kelas` (`id`, `nama_kelas`, `prodi_id`, `created_at`, `updated_at`)
 (1, 'TI-A', 1, '2025-11-14 08:25:35', '2025-11-14 08:25:35'),
 (2, 'TI-B', 1, '2025-11-14 08:25:35', '2025-11-14 08:25:35'),
 (3, 'SI-A', 2, '2025-11-14 08:25:35', '2025-11-14 08:25:35'),
-(4, 'PTI A 22', 3, '2025-11-14 09:00:19', '2025-11-14 09:00:19');
+(4, 'PTI A 22', 3, '2025-11-14 09:00:19', '2025-11-14 09:00:19'),
+(5, 'PTI B 22', 3, '2025-11-24 06:25:52', '2025-11-24 06:25:52');
 
 -- --------------------------------------------------------
 
@@ -233,7 +230,8 @@ CREATE TABLE `mahasiswa` (
 INSERT INTO `mahasiswa` (`id`, `nim`, `nama`, `foto_profil`, `prodi_id`, `semester`, `created_at`, `updated_at`, `user_id`, `kelas_id`) VALUES
 (1, '220101001', 'Andi Pratama', NULL, 1, 3, '2025-11-14 08:25:34', '2025-11-14 08:25:34', 4, NULL),
 (2, '220201001', 'Citra Lestari', NULL, 2, 3, '2025-11-14 08:25:34', '2025-11-14 08:25:34', 5, NULL),
-(3, '22050974004', 'aditya', 'FDU8r4H5fquK7B9hm42OGV0GSTLx8ZLzraXJs93D.jpg', 3, 7, '2025-11-14 09:00:55', '2025-11-14 19:02:26', 6, 4);
+(3, '22050974004', 'aditya', 'FDU8r4H5fquK7B9hm42OGV0GSTLx8ZLzraXJs93D.jpg', 3, 7, '2025-11-14 09:00:55', '2025-11-14 19:02:26', 6, 4),
+(4, '22050974032', 'Bagas Rosyidi', NULL, 3, 7, '2025-11-22 03:21:08', '2025-11-22 03:39:36', 9, 4);
 
 -- --------------------------------------------------------
 
@@ -260,9 +258,12 @@ CREATE TABLE `matakuliah` (
 INSERT INTO `matakuliah` (`id`, `kode_mk`, `nama`, `sks`, `semester`, `prodi_id`, `created_at`, `updated_at`, `description`) VALUES
 (1, 'TI101', 'Algoritma dan Pemrograman', 3, 1, 1, '2025-11-14 08:25:34', '2025-11-14 08:25:34', NULL),
 (2, 'TI102', 'Struktur Data', 3, 2, 1, '2025-11-14 08:25:34', '2025-11-14 08:25:34', NULL),
-(3, 'SI101', 'Dasar Sistem Informasi', 3, 1, 2, '2025-11-14 08:25:34', '2025-11-14 08:25:34', NULL),
 (4, 'PTI-001', 'data mining', 3, 7, 3, '2025-11-14 08:59:50', '2025-11-14 08:59:50', NULL),
-(5, 'PTI-002', 'Statistika', 3, 7, 3, '2025-11-16 00:00:12', '2025-11-16 00:00:12', NULL);
+(5, 'PTI-002', 'Statistika', 4, 7, 3, '2025-11-16 00:00:12', '2025-11-19 01:21:43', NULL),
+(7, 'PTI-003', 'Manajemen Proyek', 3, 7, 3, '2025-11-22 07:01:58', '2025-11-22 07:01:58', NULL),
+(8, 'PTI-004', 'Verval', 4, 7, 3, '2025-11-22 07:55:29', '2025-11-22 07:55:29', NULL),
+(9, 'PTI-005', 'Pembasdat', 4, 7, 3, '2025-11-22 07:56:15', '2025-11-22 07:56:15', NULL),
+(10, 'PTI-006', 'STKI', 4, 7, 3, '2025-11-22 07:56:52', '2025-11-22 07:56:52', NULL);
 
 -- --------------------------------------------------------
 
@@ -326,18 +327,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_reset_tokens`
---
-
-CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `pengambilan_mk`
 --
 
@@ -359,8 +348,9 @@ CREATE TABLE `pengambilan_mk` (
 --
 
 INSERT INTO `pengambilan_mk` (`id`, `status`, `mahasiswa_id`, `matakuliah_id`, `pengampu_id`, `semester`, `tahun_akademik`, `created_at`, `updated_at`, `kelas_id`) VALUES
-(1, 'approved', 3, 4, 1, 7, NULL, '2025-11-15 20:06:29', '2025-11-15 20:07:29', NULL),
-(3, 'pending', 3, 5, 2, 7, NULL, '2025-11-16 00:17:42', '2025-11-16 00:17:42', NULL);
+(13, 'approved', 3, 5, 2, 7, '2025/2026', '2025-11-23 19:28:57', '2025-11-23 22:19:13', NULL),
+(14, 'pending', 3, 7, 4, 7, '2025/2026', '2025-11-23 19:29:04', '2025-11-23 19:29:04', NULL),
+(15, 'pending', 3, 5, 5, 7, '2025/2026', '2025-11-23 19:29:11', '2025-11-23 19:29:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -384,7 +374,15 @@ CREATE TABLE `pengampu` (
 
 INSERT INTO `pengampu` (`id`, `matakuliah_id`, `kelas_id`, `tahun_akademik`, `created_at`, `updated_at`, `prodi_id`) VALUES
 (1, 4, 4, '2025', '2025-11-14 09:02:28', '2025-11-14 09:02:28', 3),
-(2, 5, 4, '2025/2026', '2025-11-16 00:00:50', '2025-11-16 00:00:50', 3);
+(2, 5, 4, '2025/2026', '2025-11-16 00:00:50', '2025-11-16 00:00:50', 3),
+(3, 1, 1, '2025/2026', '2025-11-19 04:43:22', '2025-11-19 04:43:22', 1),
+(4, 7, 4, '2025/2026', '2025-11-22 07:02:56', '2025-11-22 07:02:56', 3),
+(5, 5, 4, '2025/2026', '2025-11-22 07:04:02', '2025-11-22 07:04:02', 3),
+(7, 8, 4, '2025/2026', '2025-11-22 08:04:50', '2025-11-22 08:04:50', 3),
+(8, 9, 4, '2025/2026', '2025-11-22 08:05:14', '2025-11-22 08:05:14', 3),
+(9, 10, 4, '2025/2026', '2025-11-22 08:05:43', '2025-11-22 08:05:43', 3),
+(11, 4, 4, '2025/2026', '2025-11-23 05:34:18', '2025-11-23 05:34:18', 3),
+(12, 4, 5, '2025/2026', '2025-11-24 06:26:32', '2025-11-24 06:26:32', 3);
 
 -- --------------------------------------------------------
 
@@ -409,7 +407,21 @@ INSERT INTO `pengampu_dosen` (`id`, `pengampu_id`, `dosen_id`, `kelas_id`, `crea
 (1, 1, 3, 4, NULL, NULL),
 (2, 1, 2, 4, NULL, NULL),
 (3, 2, 3, 4, NULL, NULL),
-(4, 2, 2, 4, NULL, NULL);
+(4, 2, 2, 4, NULL, NULL),
+(5, 3, 1, 1, NULL, NULL),
+(6, 4, 2, 4, NULL, NULL),
+(7, 5, 5, 4, NULL, NULL),
+(8, 5, 2, 4, NULL, NULL),
+(10, 7, 2, 4, NULL, NULL),
+(11, 7, 5, 4, NULL, NULL),
+(12, 8, 3, 4, NULL, NULL),
+(13, 8, 5, 4, NULL, NULL),
+(14, 9, 3, 4, NULL, NULL),
+(15, 9, 2, 4, NULL, NULL),
+(18, 11, 2, 4, NULL, NULL),
+(19, 11, 3, 4, NULL, NULL),
+(20, 12, 2, 5, NULL, NULL),
+(21, 12, 3, 5, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -423,25 +435,6 @@ CREATE TABLE `pengumuman` (
   `dosen_id` bigint(20) UNSIGNED NOT NULL,
   `tipe` enum('perubahan','pembatalan','informasi') NOT NULL,
   `pesan` text NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `personal_access_tokens`
---
-
-CREATE TABLE `personal_access_tokens` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) NOT NULL,
-  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `token` varchar(64) NOT NULL,
-  `abilities` text DEFAULT NULL,
-  `last_used_at` timestamp NULL DEFAULT NULL,
-  `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -487,10 +480,11 @@ CREATE TABLE `ruang` (
 --
 
 INSERT INTO `ruang` (`id`, `nama_ruang`, `kapasitas`, `created_at`, `updated_at`) VALUES
-(1, 'R-101', 40, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
+(1, 'R-101', 40, '2025-11-14 08:25:33', '2025-11-18 20:38:08'),
 (2, 'R-102', 40, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
 (3, 'R-201', 35, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
-(4, 'LAB-KOM 1', 30, '2025-11-14 08:25:33', '2025-11-14 08:25:33');
+(4, 'LAB-KOM 1', 30, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
+(5, 'R-103', 40, '2025-11-22 06:51:52', '2025-11-22 06:51:52');
 
 -- --------------------------------------------------------
 
@@ -515,13 +509,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@gmail.com', NULL, '$2y$12$wuAdHeDiP2TiOnJBOE7qE..NrmEp0qxo9ZzgA5MJTswd2L0qqh6j2', 'admin', NULL, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
+(1, 'Admin', 'admin@gmail.com', NULL, '$2y$12$eJciHHXpLMafCWFsGH458.aYtfdf4GqaAL9KLNwqGgBThLNJIYEdi', 'admin', NULL, '2025-11-14 08:25:33', '2025-11-19 00:27:20'),
 (2, 'Dr. Budi Santoso, M.Kom.', 'budi.santoso@example.com', NULL, '$2y$12$QcMefz1kypGuALAwxA6at.Ar3zb0A8aGvoef8Fi8tQxTl0y.n0fsW', 'dosen', NULL, '2025-11-14 08:25:33', '2025-11-14 08:25:33'),
 (3, 'Siti Aminah, S.Kom., M.T.', 'siti.aminah@example.com', NULL, '$2y$12$5wihetPrq4cQAtcxsr7FROgffR8/A4KHgXV9snypfXhmjIcMweNkm', 'dosen', NULL, '2025-11-14 08:25:34', '2025-11-14 08:25:34'),
 (4, 'Andi Pratama', 'andi.pratama@example.com', NULL, '$2y$12$AOJzN4ZoD6fQ3nNsMP27eOJxRrCYHWTrXYBuyzQMsRwR7bMXH1ApW', 'mahasiswa', NULL, '2025-11-14 08:25:34', '2025-11-14 08:25:34'),
 (5, 'Citra Lestari', 'citra.lestari@example.com', NULL, '$2y$12$tKQubXZUBPq2I2u9Sbzg3uiDhwkTDEI1kx0cb2wrwnlhFAJ4QoadG', 'mahasiswa', NULL, '2025-11-14 08:25:34', '2025-11-14 08:25:34'),
-(6, 'aditya', 'aditya@gmail.com', NULL, '$2y$12$/Ov5TouE2hi0kxO7qXLKrOBe68.QkyplmTgwQnd.B3F9X/crKjhv2', 'mahasiswa', NULL, '2025-11-14 09:00:55', '2025-11-14 09:00:55'),
-(7, 'Pak Harun', 'harun@gmail.com', NULL, '$2y$12$2go/1GO8l14JDN1Op2qKgef02V6XSTACV2LBAjNLUcAoREB4/xFsG', 'dosen', NULL, '2025-11-14 09:01:33', '2025-11-14 09:01:33');
+(6, 'aditya', 'aditya@gmail.com', NULL, '$2y$12$/Ov5TouE2hi0kxO7qXLKrOBe68.QkyplmTgwQnd.B3F9X/crKjhv2', 'mahasiswa', '2YTQ74qPPDBzQVkXw8D8zXoTONVGeoa2Y8nBcuPbvHsEkfBdP8uFFIHHtipt', '2025-11-14 09:00:55', '2025-11-14 09:00:55'),
+(7, 'Pak Harun', 'harun@gmail.com', NULL, '$2y$12$2go/1GO8l14JDN1Op2qKgef02V6XSTACV2LBAjNLUcAoREB4/xFsG', 'dosen', NULL, '2025-11-14 09:01:33', '2025-11-14 09:01:33'),
+(9, 'Bagas Rosyidi', 'bagas@gmail.com', NULL, '$2y$12$iTi0mtt53Msr9eaY0ok5GeZs2/syFIeFPr3/d7CgKVWjzmCf5wgR6', 'mahasiswa', NULL, '2025-11-22 03:21:08', '2025-11-22 03:21:08'),
+(10, 'Dr. Budi Santoso, M.Kom.', 'budisantoso@gmail.com', NULL, '$2y$12$rNJBl3.qxi/4nKeHXXw3YuAdn5f9MtrgfPwfvfU39xQQ0oWLILWfm', 'dosen', NULL, '2025-11-22 04:48:27', '2025-11-22 04:48:27');
 
 --
 -- Indexes for dumped tables
@@ -553,13 +549,6 @@ ALTER TABLE `dosen`
   ADD UNIQUE KEY `dosen_email_unique` (`email`),
   ADD KEY `dosen_prodi_id_foreign` (`prodi_id`),
   ADD KEY `dosen_user_id_foreign` (`user_id`);
-
---
--- Indexes for table `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
 -- Indexes for table `hari`
@@ -614,12 +603,6 @@ ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_reset_tokens`
---
-ALTER TABLE `password_reset_tokens`
-  ADD PRIMARY KEY (`email`);
-
---
 -- Indexes for table `pengambilan_mk`
 --
 ALTER TABLE `pengambilan_mk`
@@ -656,14 +639,6 @@ ALTER TABLE `pengumuman`
   ADD KEY `pengumuman_dosen_id_foreign` (`dosen_id`);
 
 --
--- Indexes for table `personal_access_tokens`
---
-ALTER TABLE `personal_access_tokens`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
-  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
-
---
 -- Indexes for table `prodi`
 --
 ALTER TABLE `prodi`
@@ -690,7 +665,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -702,13 +677,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `dosen`
 --
 ALTER TABLE `dosen`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `hari`
@@ -720,7 +689,7 @@ ALTER TABLE `hari`
 -- AUTO_INCREMENT for table `jadwal_kuliah`
 --
 ALTER TABLE `jadwal_kuliah`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `jam`
@@ -732,19 +701,19 @@ ALTER TABLE `jam`
 -- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `matakuliah`
 --
 ALTER TABLE `matakuliah`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -756,31 +725,25 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `pengambilan_mk`
 --
 ALTER TABLE `pengambilan_mk`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `pengampu`
 --
 ALTER TABLE `pengampu`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `pengampu_dosen`
 --
 ALTER TABLE `pengampu_dosen`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `pengumuman`
 --
 ALTER TABLE `pengumuman`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `personal_access_tokens`
---
-ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `prodi`
@@ -792,13 +755,13 @@ ALTER TABLE `prodi`
 -- AUTO_INCREMENT for table `ruang`
 --
 ALTER TABLE `ruang`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

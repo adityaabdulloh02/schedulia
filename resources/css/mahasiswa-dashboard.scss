@@ -18,32 +18,7 @@
     letter-spacing: 1px;
 }
 
-.welcome-message-box {
-    display: flex;
-    align-items: center;
-    background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);
-    color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
 
-.welcome-message-box .icon {
-    font-size: 2.5rem;
-    margin-right: 20px;
-    animation: spin 4s linear infinite;
-}
-
-.welcome-message-box .text h4 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.5rem;
-}
-
-.welcome-message-box .text p {
-    margin: 0;
-    font-size: 1rem;
-}
 
 @keyframes spin {
     from { transform: rotate(0deg); }

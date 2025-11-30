@@ -3,19 +3,11 @@
 @section('content')
 <div class="container-fluid">
     <!-- Welcome Header -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard Mahasiswa</h1>
-    </div>
 
     <!-- Welcome Message -->
-    <div class="welcome-message-box mb-4 flex flex-col sm:flex-row items-center sm:items-start p-4">
-        <div class="icon">
-            <i class="fas fa-sun"></i>
-        </div>
-        <div class="text">
-            <h4>Selamat Datang di Schedulia!</h4>
-            <p>Semoga kamu selalu bahagia dan tetap semangat menjalani hari.</p>
-        </div>
+    <div class="welcome-banner">
+        <h1 class="mb-0">Selamat Datang Kembali, {{ Auth::user()->name }}!</h1>
+        <p class="mb-0">Semoga kamu selalu bahagia dan tetap semangat menjalani hari.</p>
     </div>
 
     <div class="row">
@@ -236,19 +228,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 .listen('.pengumuman-baru', (e) => {
                     console.log('Pengumuman baru diterima:', e);
                     
-                    // Add a check for 'e' being defined
-                    if (!e) {
-                        console.error('Received undefined event data for pengumuman-baru.');
-                        return; // Exit if e is undefined
-                    }
-
                     // Determine icon and color based on tipe
                     let icon = 'info';
                     let title = 'Informasi Baru';
-                    if (e.tipe === 'perubahan') {
+                    if (e.pengumuman.tipe === 'perubahan') {
                         icon = 'warning';
                         title = 'Perubahan Jadwal';
-                    } else if (e.tipe === 'pembatalan') {
+                    } else if (e.pengumuman.tipe === 'pembatalan') {
                         icon = 'error';
                         title = 'Pembatalan Kelas';
                     }
@@ -257,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         icon: icon,
                         title: title,
                         html: `
-                            <p class="mb-1">${e.pesan}</p>
+                            <p class="mb-1">${e.pengumuman.pesan}</p>
                             <small class="text-muted">Silakan cek halaman pengumuman untuk detail.</small>
                         `,
                         toast: true,
@@ -274,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Optional: refresh the page to show the new announcement in the list
                     // setTimeout(() => {
                     //     window.location.reload();
-                    // }, 5000); tes
+                    // }, 5000); 
                 });
         } else {
             console.log('Echo listener: Mahasiswa ID not found.');
@@ -284,5 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+    @vite(['resources/css/custom-admin.scss'])
 @endpush
 

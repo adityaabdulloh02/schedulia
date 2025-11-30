@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <!-- Welcome Banner -->
     <div class="welcome-banner">
-        <h1 class="h3 mb-0">Selamat Datang Kembali, {{ Auth::user()->name }}!</h1>
+        <h1 class="mb-0">Selamat Datang Kembali, {{ Auth::user()->name }}!</h1>
         <p class="mb-0">Semoga harimu menyenangkan dalam mengelola sistem penjadwalan.</p>
     </div>
 
@@ -99,7 +99,7 @@
                             </a>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <a href="{{ route('jadwal.create') }}" class="quick-action-btn text-decoration-none">
+                            <a href="{{ route('admin.jadwal.index') }}" class="quick-action-btn text-decoration-none">
                                 <i class="bi bi-calendar-plus"></i>
                                 <span>Buat Jadwal</span>
                             </a>

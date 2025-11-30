@@ -58,37 +58,4 @@ class PengumumanBaru implements ShouldBroadcast
     {
         return 'pengumuman-baru';
     }
-
-    /**
-     * Get the data to broadcast.
-     *
-     * @return array
-     */
-    public function broadcastWith()
-    {
-        $this->pengumuman->load(['jadwalKuliah.pengampu.matakuliah', 'jadwalKuliah.kelas', 'dosen', 'jadwalKuliah.hari', 'jadwalKuliah.ruang']);
-
-        return [
-            'id' => $this->pengumuman->id,
-            'tipe' => $this->pengumuman->tipe,
-            'pesan' => $this->pengumuman->pesan,
-            'created_at' => $this->pengumuman->created_at->toDateTimeString(),
-            'dosen' => [
-                'nama' => $this->pengumuman->dosen->nama_dosen,
-            ],
-            'jadwal_kuliah' => [
-                'id' => $this->pengumuman->jadwalKuliah->id,
-                'hari' => $this->pengumuman->jadwalKuliah->hari->nama_hari,
-                'jam_mulai' => $this->pengumuman->jadwalKuliah->jam_mulai,
-                'jam_selesai' => $this->pengumuman->jadwalKuliah->jam_selesai,
-                'ruang' => $this->pengumuman->jadwalKuliah->ruang->nama_ruang,
-                'matakuliah' => [
-                    'nama' => $this->pengumuman->jadwalKuliah->pengampu->matakuliah->nama_matakuliah,
-                ],
-                'kelas' => [
-                    'nama' => $this->pengumuman->jadwalKuliah->kelas->nama_kelas,
-                ],
-            ],
-        ];
-    }
 }

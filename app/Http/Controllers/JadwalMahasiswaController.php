@@ -82,7 +82,7 @@ class JadwalMahasiswaController extends Controller
                 });
             })->get();
 
-        $pdf = Pdf::loadView('jadwalmahasiswa.pdf', compact('jadwalKuliah'));
+        $pdf = Pdf::loadView('admin.jadwal.pdf', compact('jadwalKuliah'));
 
         return $pdf->stream('jadwal-kuliah-'.$mahasiswa->nim.'.pdf');
     }

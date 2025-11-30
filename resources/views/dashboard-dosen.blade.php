@@ -4,15 +4,10 @@
 
 
 <div class="container-fluid">
-    <!-- Welcome Header -->
-    <div class="welcome-message-box mb-4 flex flex-col sm:flex-row items-center sm:items-start p-4">
-        <div class="icon">
-            <i class="fas fa-sun"></i>
-        </div>
-        <div class="text">
-            <h4>Selamat Datang, Dosen {{ Auth::user()->name }} di Schedulia!</h4>
-            <p>Semoga hari Anda produktif dan penuh pencapaian dalam mengajar.</p>
-        </div>
+    <!-- Welcome Message -->
+    <div class="welcome-banner">
+        <h1 class="mb-0">Selamat Datang Kembali, {{ Auth::user()->name }}!</h1>
+        <p class="mb-0">Semoga kamu selalu bahagia dan tetap semangat menjalani hari.</p>
     </div>
 
     <div class="row">
@@ -196,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     letter-spacing: 1px;
 }
 </style>
+@vite(['resources/css/custom-admin.scss'])
 @endpush
 
 @endsection

@@ -10,6 +10,7 @@ use App\Models\Kelas;
 use App\Models\Matakuliah;
 use App\Models\Pengampu;
 use App\Models\Ruang;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -379,5 +380,54 @@ class JadwalKuliahController extends Controller
 
         // Redirect ke halaman jadwal dengan pesan sukses
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil digenerate!');
+    }
+
+    public function exportPDF()
+    {
+        $jadwal = JadwalKuliah::with(['pengampu.matakuliah', 'pengampu.dosen', 'ruang', 'hari', 'pengampu.kelas', 'pengampu.prodi'])->get();
+        $pdf = Pdf::loadView('jadwal.pdf', compact('jadwal'));
+        return $pdf->stream('jadwal-kuliah.pdf');
+    }
+
+    public function show($id)
+    {
+        $jadwal = JadwalKuliah::with(['pengampu.matakuliah', 'pengampu.dosen', 'ruang', 'hari', 'pengampu.kelas', 'pengampu.prodi'])
+            ->findOrFail($id);
+
+        return view('jadwal.show', compact('jadwal'));
+    }
+
+    public function getEmptyScheduleSlots()
+    {
+        $haris = Hari::all();
+        $jams = Jam::all(); // Assuming Jam model has jam_mulai and jam_selesai
+        $ruangs = Ruang::all();
+
+        $emptySlots = [];
+
+        foreach ($haris as $hari) {
+            foreach ($jams as $jam) {
+                foreach ($ruangs as $ruang) {
+                    $isConflict = JadwalKuliah::where('hari_id', $hari->id)
+                        ->where('ruang_id', $ruang->id)
+                        ->where(function ($query) use ($jam) {
+                            $query->where('jam_mulai', '<', $jam->jam_selesai)
+                                  ->where('jam_selesai', '>', $jam->jam_mulai);
+                        })
+                        ->exists();
+
+                    if (!$isConflict) {
+                        $emptySlots[] = [
+                            'hari' => $hari->nama_hari,
+                            'jam_mulai' => $jam->jam_mulai,
+                            'jam_selesai' => $jam->jam_selesai,
+                            'ruang' => $ruang->nama_ruang,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return response()->json($emptySlots);
     }
 }

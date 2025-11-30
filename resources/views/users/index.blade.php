@@ -10,13 +10,13 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Data User</h3>
+                    <h3 class="mb-0">Data Pengguna</h3>
                     <div class="d-flex align-items-center">
                         <a href="{{ route('users.create') }}" class="btn btn-success btn-sm me-2">Tambah User</a>
                         <form action="{{ route('users.index') }}" method="GET" class="d-flex">
                             <div class="input-group input-group-sm">
                                 <input type="text" name="search" class="form-control" placeholder="Pencarian..." value="{{ request('search') }}">
-                                <button type="submit" class="btn btn-outline-secondary">Search</button>
+                                <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </form>
                     </div>

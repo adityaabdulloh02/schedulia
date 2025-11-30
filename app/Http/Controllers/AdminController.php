@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\JadwalKuliah;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class AdminController extends Controller
 {
     public function index()
@@ -109,6 +112,72 @@ class AdminController extends Controller
     public function absensi()
     {
         return view('admin.absensi');
+    }
+
+    public function jadwalIndex(Request $request)
+    {
+        $search = $request->input('search');
+
+        $jadwalKuliahQuery = JadwalKuliah::query();
+
+        if ($search) {
+            $jadwalKuliahQuery->where(function ($query) use ($search) {
+                $query->orWhereHas('hari', function ($q) use ($search) {
+                    $q->where('nama_hari', 'like', '%'.$search.'%');
+                })->orWhereHas('pengampu.matakuliah', function ($q) use ($search) {
+                    $q->where('nama', 'like', '%'.$search.'%');
+                })->orWhere('jam_mulai', 'like', '%'.$search.'%')->orWhereHas('ruang', function ($q) use ($search) {
+                    $q->where('nama_ruang', 'like', '%'.$search.'%');
+                })->orWhereHas('kelas', function ($q) use ($search) {
+                    $q->where('nama_kelas', 'like', '%'.$search.'%');
+                });
+            });
+        }
+
+        $jadwalKuliah = $jadwalKuliahQuery->paginate(10);
+
+        return view('admin.jadwal.index', compact('jadwalKuliah', 'search'));
+    }
+
+    public function exportJadwalPDF(Request $request)
+    {
+        $search = $request->input('search');
+
+        $jadwalKuliahQuery = JadwalKuliah::with([
+            'hari', 
+            'ruang', 
+            'pengampu.matakuliah', 
+            'pengampu.dosen', 
+            'pengampu.kelas', 
+            'pengampu.prodi'
+        ]);
+
+        if ($search) {
+            $jadwalKuliahQuery->where(function ($query) use ($search) {
+                $query->orWhereHas('hari', function ($q) use ($search) {
+                    $q->where('nama_hari', 'like', '%'.$search.'%');
+                })->orWhereHas('pengampu.matakuliah', function ($q) use ($search) {
+                    $q->where('nama', 'like', '%'.$search.'%');
+                })->orWhere('jam_mulai', 'like', '%'.$search.'%')->orWhereHas('ruang', function ($q) use ($search) {
+                    $q->where('nama_ruang', 'like', '%'.$search.'%');
+                })->orWhereHas('pengampu.kelas', function ($q) use ($search) {
+                    $q->where('nama_kelas', 'like', '%'.$search.'%');
+                });
+            });
+        }
+
+        $jadwalKuliah = $jadwalKuliahQuery->get();
+
+        $scheduliaLogoSrc = '';
+        $scheduliaLogoPath = public_path('images/SCHEDULIA-Logo.png');
+        if (file_exists($scheduliaLogoPath)) {
+            $scheduliaLogoData = base64_encode(file_get_contents($scheduliaLogoPath));
+            $scheduliaLogoSrc = 'data:image/png;base64,' . $scheduliaLogoData;
+        }
+
+        $pdf = Pdf::loadView('admin.jadwal.pdf', compact('jadwalKuliah', 'scheduliaLogoSrc'));
+
+        return $pdf->stream('jadwal-kuliah-admin.pdf');
     }
 }
 //tes

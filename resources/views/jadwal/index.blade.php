@@ -12,6 +12,11 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">Jadwal Kuliah</h3>
                     <div class="d-flex align-items-center">
+                        @auth
+                        @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('jadwal.exportPDF') }}" class="btn btn-primary btn-sm me-2">Export PDF</a>
+                        @endif
+                        @endauth
                         <form action="{{ route('jadwal.generate') }}" method="POST" class="d-inline me-2">
                             @csrf
                             <div class="input-group input-group-sm">
@@ -20,10 +25,13 @@
                             </div>
                         </form>
                         <a href="{{ route('jadwal.create') }}" class="btn btn-success btn-sm me-2">Tambah Manual</a>
+                        <button type="button" class="btn btn-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#emptySlotsModal" id="showEmptySlotsBtn">
+                            List Jadwal Kosong
+                        </button>
                         <form action="{{ route('jadwal.index') }}" method="GET" class="d-flex">
                             <div class="input-group input-group-sm">
                                 <input type="text" name="search" class="form-control" placeholder="Pencarian..." value="{{ request('search') }}">
-                                <button type="submit" class="btn btn-outline-secondary">Search</button>
+                                <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </form>
                     </div>
@@ -161,6 +169,25 @@
     </div>
 </div>
 
+<!-- Modal for Empty Slots -->
+<div class="modal fade" id="emptySlotsModal" tabindex="-1" aria-labelledby="emptySlotsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emptySlotsModalLabel">Jadwal Kosong Tersedia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="emptySlotsContent">
+                    <p>Memuat jadwal kosong...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -195,6 +222,58 @@
                 });
             });
         });
+
+        // Logic for fetching and displaying empty slots
+        const showEmptySlotsBtn = document.getElementById('showEmptySlotsBtn');
+        const emptySlotsContent = document.getElementById('emptySlotsContent');
+
+        if (showEmptySlotsBtn) {
+            showEmptySlotsBtn.addEventListener('click', function () {
+                emptySlotsContent.innerHTML = '<p>Memuat jadwal kosong...</p>'; // Reset content
+
+                fetch('{{ route('jadwal.empty-slots') }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            let tableHtml = `
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th class="fw-bold text-white">Hari</th>
+                                                <th class="fw-bold text-white">Jam Mulai</th>
+                                                <th class="fw-bold text-white">Jam Selesai</th>
+                                                <th class="fw-bold text-white">Ruang</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            data.forEach(slot => {
+                                tableHtml += `
+                                    <tr>
+                                        <td>${slot.hari}</td>
+                                        <td>${slot.jam_mulai.substring(0, 5)}</td>
+                                        <td>${slot.jam_selesai.substring(0, 5)}</td>
+                                        <td>${slot.ruang}</td>
+                                    </tr>
+                                `;
+                            });
+                            tableHtml += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                            emptySlotsContent.innerHTML = tableHtml;
+                        } else {
+                            emptySlotsContent.innerHTML = '<p>Tidak ada jadwal kosong yang tersedia.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching empty slots:', error);
+                        emptySlotsContent.innerHTML = '<p class="text-danger">Gagal memuat jadwal kosong. Silakan coba lagi.</p>';
+                    });
+            });
+        }
     });
 </script>
 @endpush

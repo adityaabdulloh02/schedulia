@@ -40,6 +40,21 @@ class DosenMahasiswaController extends Controller
             ->unique('id')
             ->values();
 
+        // Get all distinct Kelas associated with the dosen's pengampu records
+        $kelasDosenQuery = Pengampu::whereIn('id', $pengampuIds)
+            ->with('kelas');
+
+        if ($request->has('matakuliah_id') && $request->matakuliah_id != '') {
+            $kelasDosenQuery->where('matakuliah_id', $request->matakuliah_id);
+        }
+
+        $kelasDosen = $kelasDosenQuery->get()
+            ->map(function ($pengampu) {
+                return $pengampu->kelas;
+            })
+            ->unique('id')
+            ->values();
+
         // Get the Mahasiswa data
         $mahasiswa = Mahasiswa::whereIn('id', $mahasiswaIds)
             ->with(['prodi', 'kelas']);
@@ -56,9 +71,24 @@ class DosenMahasiswaController extends Controller
             });
         }
 
-        $mahasiswa = $mahasiswa->get();
+        // Apply kelas filter if present
+        if ($request->has('kelas_id') && $request->kelas_id != '') {
+            $kelasId = $request->kelas_id;
+            $mahasiswa->whereHas('pengambilanMk', function ($query) use ($kelasId, $pengampuIds) {
+                $query->where('status', 'approved')
+                      ->whereIn('pengampu_id', $pengampuIds)
+                      ->whereHas('pengampu', function ($q) use ($kelasId) {
+                          $q->where('kelas_id', $kelasId);
+                      });
+            });
+        }
 
-        return view('dosen.mahasiswa.index', compact('mahasiswa', 'mataKuliahDosen'));
+        $mahasiswa = $mahasiswa->paginate(10);
+
+        $selectedMatakuliahId = $request->matakuliah_id;
+        $selectedKelasId = $request->kelas_id;
+
+        return view('dosen.mahasiswa.index', compact('mahasiswa', 'mataKuliahDosen', 'kelasDosen', 'selectedMatakuliahId', 'selectedKelasId'));
     }
 
     public function showKrs(Mahasiswa $mahasiswa)
