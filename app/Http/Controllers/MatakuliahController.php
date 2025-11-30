@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Matakuliah;
 use App\Models\Prodi;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,14 @@ class MatakuliahController extends Controller
         // Validasi input
         $request->validate([
             'kode_mk' => 'required|unique:matakuliah,kode_mk',
-            'nama' => 'required',
+            'nama' => [
+                'required',
+                Rule::unique('matakuliah')->where(function ($query) use ($request) {
+                    return $query->where('nama', $request->nama)
+                                 ->where('semester', $request->semester)
+                                 ->where('prodi_id', $request->prodi_id);
+                }),
+            ],
             'sks' => 'required|numeric|min:1',
             'semester' => 'required|numeric|min:1|max:8',
             'prodi_id' => 'required|exists:prodi,id',
@@ -58,6 +66,7 @@ class MatakuliahController extends Controller
             'kode_mk.required' => 'Kode mata kuliah wajib diisi',
             'kode_mk.unique' => 'Kode mata kuliah sudah digunakan',
             'nama.required' => 'Nama mata kuliah wajib diisi',
+            'nama.unique' => 'Mata kuliah dengan nama, semester, dan program studi yang sama sudah ada.',
             'sks.required' => 'SKS wajib diisi',
             'sks.numeric' => 'SKS harus berupa angka',
             'semester.required' => 'Semester wajib diisi',
@@ -95,7 +104,14 @@ class MatakuliahController extends Controller
         // Validasi input
         $request->validate([
             'kode_mk' => 'required|unique:matakuliah,kode_mk,'.$id,
-            'nama' => 'required',
+            'nama' => [
+                'required',
+                Rule::unique('matakuliah')->where(function ($query) use ($request) {
+                    return $query->where('nama', $request->nama)
+                                 ->where('semester', $request->semester)
+                                 ->where('prodi_id', $request->prodi_id);
+                })->ignore($id), // Exclude the current record
+            ],
             'sks' => 'required|numeric|min:1',
             'semester' => 'required|numeric|min:1|max:8',
             'prodi_id' => 'required|exists:prodi,id',
@@ -103,6 +119,7 @@ class MatakuliahController extends Controller
             'kode_mk.required' => 'Kode mata kuliah wajib diisi',
             'kode_mk.unique' => 'Kode mata kuliah sudah digunakan',
             'nama.required' => 'Nama mata kuliah wajib diisi',
+            'nama.unique' => 'Mata kuliah dengan nama, semester, dan program studi yang sama sudah ada.',
             'sks.required' => 'SKS wajib diisi',
             'sks.numeric' => 'SKS harus berupa angka',
             'semester.required' => 'Semester wajib diisi',
