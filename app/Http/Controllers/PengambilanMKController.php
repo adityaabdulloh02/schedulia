@@ -44,31 +44,18 @@ class PengambilanMKController extends Controller
     {
         $mahasiswa = Auth::user()->mahasiswa;
 
-        // Ambil ID matakuliah yang sudah diambil dan divalidasi (status 'approved') oleh mahasiswa
-        $approvedPengampuIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
-            ->where('status', 'approved')
+        // Ambil jadwal kuliah yang sesuai dengan kelas mahasiswa yang login
+        $jadwalKuliahTersedia = \App\Models\JadwalKuliah::where('kelas_id', $mahasiswa->kelas_id)
+            ->with(['pengampu.matakuliah', 'pengampu.dosen', 'ruang', 'hari', 'jam'])
+            ->get();
+
+        // Ambil ID pengampu yang sudah diambil (pending atau approved) oleh mahasiswa
+        $diambilPengampuIds = \App\Models\PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+            ->whereIn('status', ['pending', 'approved'])
             ->pluck('pengampu_id')
             ->toArray();
 
-        // Ambil semua matakuliah yang sesuai dengan prodi mahasiswa dan semester mahasiswa saat ini,
-        // dan yang belum diambil serta divalidasi
-        $pengampuTersedia = Pengampu::where('prodi_id', $mahasiswa->prodi_id)
-            ->whereHas('matakuliah', function ($query) use ($mahasiswa) {
-                $query->where('semester', $mahasiswa->semester);
-            })
-            ->whereNotIn('id', $approvedPengampuIds)
-            ->with(['matakuliah', 'dosen', 'kelas'])
-            ->get();
-
-        // Ambil ID matakuliah yang sudah diambil oleh mahasiswa (termasuk pending)
-        // Ini mungkin tidak lagi diperlukan di view jika kita sudah memfilter matakuliahTersedia
-        // Namun, jika view masih menggunakannya untuk menampilkan status "sudah diambil" untuk pending, kita bisa biarkan.
-        $diambilPengampuIds = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)->pluck('pengampu_id')->toArray();
-
-        $prodis = Prodi::all();
-        $kelass = Kelas::all();
-
-        return view('pengambilanmk.create', compact('pengampuTersedia', 'diambilPengampuIds', 'prodis', 'kelass'));
+        return view('pengambilanmk.create', compact('jadwalKuliahTersedia', 'diambilPengampuIds'));
     }
 
     public function storeForStudent(Request $request)
@@ -136,7 +123,10 @@ class PengambilanMKController extends Controller
     public function exportKRS_PDF()
     {
         $mahasiswa = Auth::user()->mahasiswa;
-        $pengambilanMKs = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)->with('matakuliah')->get();
+        $pengambilanMKs = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+            ->where('status', 'approved') // Added this line
+            ->with('matakuliah')
+            ->get();
 
         $pdf = PDF::loadView('pengambilanmk.krs_pdf', compact('pengambilanMKs', 'mahasiswa'));
 
