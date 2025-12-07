@@ -367,6 +367,7 @@ class DosenController extends Controller
 
     public function storeAbsensi(Request $request, Pengampu $pengampu)
     {
+        Log::info('Start storeAbsensi');
         $request->validate([
             'absensi' => 'required|array',
             'absensi.*' => 'required|in:hadir,izin,sakit,alpha',
@@ -412,6 +413,7 @@ class DosenController extends Controller
             );
         }
 
-        return redirect()->route('dosen.absensi.index')->with('success', 'Absensi berhasil disimpan.');
+        Log::info('Redirecting to dosen/mahasiswa');
+        return redirect('dosen/mahasiswa')->with('success', 'Absensi berhasil disimpan.');
     }
 }
