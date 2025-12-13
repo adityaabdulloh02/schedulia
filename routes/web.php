@@ -34,6 +34,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
     Route::get('mahasiswa/profil/edit', [MahasiswaController::class, 'editProfil'])->name('mahasiswa.profil.edit');
     Route::put('mahasiswa/profil', [MahasiswaController::class, 'updateProfil'])->name('mahasiswa.profil.update');
     Route::get('mahasiswa/pengumuman', [PengumumanController::class, 'indexForMahasiswa'])->name('mahasiswa.pengumuman.index');
+    Route::get('mahasiswa/absensi', [MahasiswaController::class, 'absensi'])->name('mahasiswa.absensi');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

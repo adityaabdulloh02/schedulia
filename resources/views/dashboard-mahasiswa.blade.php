@@ -110,7 +110,17 @@
                 <a href="{{ route('mahasiswa.profil.edit') }}" class="btn btn-primary btn-sm btn-edit-profile"><i class="fas fa-user-edit me-1"></i>Edit Profil</a>
             </div>
 
-            
+            <!-- Widget Akademik -->
+            <div class="widget-card info-border mb-4">
+                <div class="widget-header">
+                    <h2 class="widget-title"><i class="fas fa-graduation-cap"></i>Akademik</h2>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{ route('mahasiswa.absensi') }}" class="list-group-item list-group-item-action"><i class="fas fa-user-check fa-fw me-2"></i>Absensi</a>
+                    <a href="{{ route('krs.index') }}" class="list-group-item list-group-item-action"><i class="fas fa-file-alt fa-fw me-2"></i>KRS</a>
+                    <!-- Tambahkan link akademik lainnya di sini -->
+                </div>
+            </div>
         </div>
     </div>
     
@@ -272,4 +282,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     @vite(['resources/css/custom-admin.scss'])
 @endpush
-

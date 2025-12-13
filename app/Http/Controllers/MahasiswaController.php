@@ -10,6 +10,7 @@ use App\Models\PengambilanMK;
 use App\Models\Pengumuman;
 use App\Models\Prodi;
 use App\Models\User;
+use App\Models\Absensi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -295,5 +296,57 @@ class MahasiswaController extends Controller
         });
 
         return redirect()->route('mahasiswa.index')->with('success', 'Mahasiswa berhasil dihapus.');
+    }
+
+    public function absensi(Request $request)
+    {
+        $user = Auth::user();
+        $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+
+        // Ambil semua matakuliah yang diambil mahasiswa untuk filter
+        $allApprovedPengambilanMK = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+            ->where('status', 'approved')
+            ->with('pengampu.matakuliah')
+            ->get();
+
+        $selectedMataKuliahId = $request->input('matakuliah_id');
+
+        $query = PengambilanMK::where('mahasiswa_id', $mahasiswa->id)
+            ->where('status', 'approved')
+            ->with('pengampu.matakuliah');
+
+        if ($selectedMataKuliahId) {
+            $query->whereHas('pengampu', function ($q) use ($selectedMataKuliahId) {
+                $q->where('matakuliah_id', $selectedMataKuliahId);
+            });
+        }
+
+        $approvedPengambilanMK = $query->get();
+
+        $absensiData = [];
+        foreach ($approvedPengambilanMK as $pengambilan) {
+            $riwayatAbsen = Absensi::where('mahasiswa_id', $mahasiswa->id)
+                ->whereHas('jadwalKuliah', function ($q) use ($pengambilan) {
+                    $q->where('pengampu_id', $pengambilan->pengampu_id);
+                })
+                ->orderBy('pertemuan', 'asc')
+                ->get();
+
+            $totalPertemuan = $riwayatAbsen->count();
+            $hadirCount = $riwayatAbsen->where('status', 'hadir')->count();
+
+            $persentase = ($hadirCount / 16) * 100;
+            $persentase = min($persentase, 100); // Batasi persentase maksimal 100%
+
+            $absensiData[] = [
+                'matakuliah' => $pengambilan->pengampu->matakuliah->nama_matakuliah,
+                'total_pertemuan' => $totalPertemuan,
+                'hadir' => $hadirCount,
+                'persentase' => $persentase,
+                'riwayat' => $riwayatAbsen,
+            ];
+        }
+
+        return view('mahasiswa.absensi', compact('mahasiswa', 'absensiData', 'allApprovedPengambilanMK', 'selectedMataKuliahId'));
     }
 }
