@@ -30,4 +30,9 @@ class Absensi extends Model
     {
         return $this->belongsTo(Mahasiswa::class);
     }
+
+    public function pengampu()
+    {
+        return $this->belongsTo(Pengampu::class, 'pengampu_id');
+    }
 }

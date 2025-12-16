@@ -48,7 +48,7 @@
                             <label for="kapasitas" class="form-label">Kapasitas Ruangan</label>
                             <input type="number" class="form-control @error('kapasitas') is-invalid @enderror"
                                    id="kapasitas" name="kapasitas" value="{{ old('kapasitas') }}"
-                                   placeholder="Masukkan kapasitas ruangan" max="50">
+                                   placeholder="Masukkan kapasitas ruangan" min="1" max="50">
                             @error('kapasitas')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -68,3 +68,48 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Validasi nama_ruang
+            const nama_ruang = document.getElementById('nama_ruang');
+            if (!nama_ruang.value.trim()) {
+                setInvalid(nama_ruang, 'Program Studi wajib diisi');
+                isValid = false;
+            }
+
+            const kapasitas = document.getElementById('kapasitas');
+            if (!kapasitas.value || kapasitas.value < 1) {
+                setInvalid(kapasitas, 'kapasitas minimal 1');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        function setInvalid(element, message) {
+            element.classList.add('is-invalid');
+            const feedback = element.nextElementSibling;
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                feedback.textContent = message;
+            }
+        }
+
+        // Reset validation on input
+        const inputs = form.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
+        });
+    });
+</script>
+@endpush

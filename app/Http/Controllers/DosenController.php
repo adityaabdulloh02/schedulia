@@ -362,7 +362,8 @@ class DosenController extends Controller
                                 ->max('pertemuan');
         $nextPertemuan = $nextPertemuan ? $nextPertemuan + 1 : 1; // If no attendance yet, start at 1
 
-        return view('dosen.absensi.take', compact('pengampu', 'mahasiswas', 'jadwalKuliahs', 'selectedJadwalKuliah', 'nextPertemuan'));
+        return view('dosen.absensi.take', compact('pengampu', 'mahasiswas', 'jadwalKuliahs', 'selectedJadwalKuliah', 
+        'nextPertemuan'));
     }
 
     public function storeAbsensi(Request $request, Pengampu $pengampu)

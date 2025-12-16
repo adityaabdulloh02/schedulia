@@ -51,7 +51,7 @@
                             <label for="kapasitas" class="form-label">Kapasitas Ruangan</label>
                             <input type="number" class="form-control @error('kapasitas') is-invalid @enderror"
                                    id="kapasitas" name="kapasitas" value="{{ old('kapasitas', $ruang->kapasitas) }}"
-                                   placeholder="Masukkan kapasitas ruangan" min="0" max="40">
+                                   placeholder="Masukkan kapasitas ruangan" min="1" max="40">
                             @error('kapasitas')
                                 <div class="invalid-feedback">
                                     {{ $message }}

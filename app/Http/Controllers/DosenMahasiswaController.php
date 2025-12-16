@@ -99,11 +99,36 @@ class DosenMahasiswaController extends Controller
         return view('dosen.mahasiswa.krs', compact('mahasiswa', 'krs'));
     }
 
-    public function showAbsensi(Mahasiswa $mahasiswa)
+    public function showAbsensi(Request $request, Mahasiswa $mahasiswa)
     {
-        $absensi = Absensi::where('mahasiswa_id', $mahasiswa->id)
-            ->with('jadwalKuliah.pengampu.matakuliah')
-            ->get();
-        return view('dosen.mahasiswa.absensi', compact('mahasiswa', 'absensi'));
+        $dosen = Auth::user()->dosen;
+        $pengampuIds = $dosen->pengampus->pluck('id');
+
+        // Get the list of courses for the filter dropdown first
+        $matakuliahList = Pengampu::whereIn('id', $pengampuIds)
+            ->with('matakuliah')
+            ->get()
+            ->map(function ($pengampu) {
+                return $pengampu->matakuliah;
+            })
+            ->unique('id')->values();
+
+
+        // Base query for attendance
+        $absensiQuery = Absensi::where('mahasiswa_id', $mahasiswa->id)
+            ->whereIn('pengampu_id', $pengampuIds);
+
+        // Filter by selected matakuliah if any
+        $selectedMataKuliahId = $request->input('matakuliah_id');
+        if ($selectedMataKuliahId) {
+            $absensiQuery->whereHas('pengampu', function ($query) use ($selectedMataKuliahId) {
+                $query->where('matakuliah_id', $selectedMataKuliahId);
+            });
+        }
+
+        // Eager load and get the final results
+        $absensi = $absensiQuery->with('jadwalKuliah.pengampu.matakuliah')->latest()->get();
+
+        return view('dosen.mahasiswa.absensi', compact('mahasiswa', 'absensi', 'matakuliahList', 'selectedMataKuliahId'));
     }
 }

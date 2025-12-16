@@ -82,7 +82,7 @@
                                     <td>{{ $mhs->kelas->nama_kelas ?? 'N/A' }}</td>
                                     <td>
                                         <a href="{{ route('dosen.mahasiswa.absensi', $mhs->id) }}" class="btn btn-warning btn-sm">Absensi</a>
-                                        <a href="{{ route('dosen.mahasiswa.krs', $mhs->id) }}" class="btn btn-info btn-sm">KRS</a>
+                                        
                                     </td>
                                 </tr>
                                 @empty

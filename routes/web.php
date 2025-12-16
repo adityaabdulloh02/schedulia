@@ -138,7 +138,6 @@ Route::get('/pengampu/navigation', [PengampuController::class, 'navigation'])->n
 Route::view('/', 'welcome');
 
 Route::view('/login', 'auth.login')->name('login.form');
-
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/user/{id}/update-password', [UserController::class, 'updatePassword'])->name('user.updatePassword');

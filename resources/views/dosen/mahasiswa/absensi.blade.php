@@ -9,6 +9,26 @@
             <h6 class="m-0 font-weight-bold text-white">Riwayat Absensi</h6>
         </div>
         <div class="card-body">
+            <!-- Filter Form -->
+            <div class="mb-4">
+                <form action="{{ route('dosen.mahasiswa.absensi', $mahasiswa->id) }}" method="GET" class="form-inline">
+                    <div class="form-group mr-2">
+                        <label for="matakuliah_id" class="mr-2">Filter Mata Kuliah:</label>
+                        <select name="matakuliah_id" id="matakuliah_id" class="form-control">
+                            <option value="">Semua Mata Kuliah</option>
+                            @foreach($matakuliahList as $matakuliah)
+                                <option value="{{ $matakuliah->id }}" {{ (isset($selectedMataKuliahId) && $selectedMataKuliahId == $matakuliah->id) ? 'selected' : '' }}>
+                                    {{ $matakuliah->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </form>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
