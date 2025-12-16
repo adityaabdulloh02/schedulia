@@ -21,7 +21,7 @@
             @csrf
 
             <div class="form-group">
-                <input type="email" name="email" placeholder="Email Akademik" class="form-control @error('email') is-invalid @enderror" 
+                <input type="email" name="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" 
                 required autofocus oninvalid="if(this.validity.valueMissing){this.setCustomValidity('Harap isi bidang ini')}else if
                 (this.validity.typeMismatch){this.setCustomValidity('Masukkan alamat email yang valid, harus mengandung karakter \'@\'')}" 
                 oninput="this.setCustomValidity('')">
@@ -37,7 +37,7 @@
 
             <div class="form-group position-relative">
                 <input type="password" name="password" id="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" 
-                required oninvalid="this.setCustomValidity('Harap isi bidang ini')" oninput="this.setCustomValidity('')">
+                required oninvalid="if(this.validity.valueMissing){this.setCustomValidity('Harap isi bidang ini')}else if(this.validity.tooShort){this.setCustomValidity('Password minimal 8 karakter')}" oninput="this.setCustomValidity('')" minlength="8">
                 <span class="icon toggle-password" onclick="togglePasswordVisibility()">
                     <i class="fas fa-eye"></i>
                 </span>
@@ -59,16 +59,32 @@
     function togglePasswordVisibility() {
         const passwordField = document.getElementById('password');
         const toggleIcon = document.querySelector('.toggle-password i');
+        let isVisible = false;
 
         if (passwordField.type === 'password') {
             passwordField.type = 'text';
             toggleIcon.classList.remove('fa-eye');
             toggleIcon.classList.add('fa-eye-slash');
+            isVisible = true;
         } else {
             passwordField.type = 'password';
             toggleIcon.classList.remove('fa-eye-slash');
             toggleIcon.classList.add('fa-eye');
+            isVisible = false;
         }
+        localStorage.setItem('password_visible', isVisible);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.querySelector('.toggle-password i');
+        const isVisible = localStorage.getItem('password_visible') === 'true';
+
+        if (isVisible) {
+            passwordField.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        }
+    });
 </script>
 @endsection
